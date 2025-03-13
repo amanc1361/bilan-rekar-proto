@@ -2,6 +2,7 @@ syntax = "proto3";
 
 package user;
 
+option go_package = "github.com/bilan-rekar-proto/gen/go/user/v1;userv1";
 
 import "google/protobuf/timestamp.proto";
 
