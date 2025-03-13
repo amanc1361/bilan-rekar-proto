@@ -6,8 +6,8 @@ managed:
 plugins:
   - plugin: buf.build/protocolbuffers/go
     out: gen/go
-    opt: paths=source_relative
+    opt: paths=source_relative,module=github.com/bilan-rekar-proto
   - plugin: buf.build/grpc/go
     out: gen/go
-    opt: paths=source_relative
+    opt: paths=source_relative,module=github.com/bilan-rekar-proto
 
