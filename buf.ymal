@@ -1,0 +1,10 @@
+version: v1
+name: github.com/amanc1361/bilan-rekar-proto
+deps:
+  - buf.build/googleapis/googleapis
+breaking:
+  use:
+    - FILE
+lint:
+  use:
+    - DEFAULT
