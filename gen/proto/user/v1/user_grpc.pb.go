@@ -19,11 +19,11 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	UserService_CreateUser_FullMethodName = "/user.UserService/CreateUser"
-	UserService_GetUser_FullMethodName    = "/user.UserService/GetUser"
-	UserService_UpdateUser_FullMethodName = "/user.UserService/UpdateUser"
-	UserService_DeleteUser_FullMethodName = "/user.UserService/DeleteUser"
-	UserService_ListUsers_FullMethodName  = "/user.UserService/ListUsers"
+	UserService_CreateUser_FullMethodName = "/user.v1.UserService/CreateUser"
+	UserService_GetUser_FullMethodName    = "/user.v1.UserService/GetUser"
+	UserService_UpdateUser_FullMethodName = "/user.v1.UserService/UpdateUser"
+	UserService_DeleteUser_FullMethodName = "/user.v1.UserService/DeleteUser"
+	UserService_ListUsers_FullMethodName  = "/user.v1.UserService/ListUsers"
 )
 
 // UserServiceClient is the client API for UserService service.
@@ -32,10 +32,15 @@ const (
 //
 // UserService defines the gRPC service for user operations
 type UserServiceClient interface {
+	// CreateUser creates a new user
 	CreateUser(ctx context.Context, in *CreateUserRequest, opts ...grpc.CallOption) (*CreateUserResponse, error)
+	// GetUser retrieves a user by ID
 	GetUser(ctx context.Context, in *GetUserRequest, opts ...grpc.CallOption) (*GetUserResponse, error)
+	// UpdateUser updates an existing user
 	UpdateUser(ctx context.Context, in *UpdateUserRequest, opts ...grpc.CallOption) (*UpdateUserResponse, error)
+	// DeleteUser deletes a user by ID
 	DeleteUser(ctx context.Context, in *DeleteUserRequest, opts ...grpc.CallOption) (*DeleteUserResponse, error)
+	// ListUsers retrieves a list of users with pagination
 	ListUsers(ctx context.Context, in *ListUsersRequest, opts ...grpc.CallOption) (*ListUsersResponse, error)
 }
 
@@ -103,10 +108,15 @@ func (c *userServiceClient) ListUsers(ctx context.Context, in *ListUsersRequest,
 //
 // UserService defines the gRPC service for user operations
 type UserServiceServer interface {
+	// CreateUser creates a new user
 	CreateUser(context.Context, *CreateUserRequest) (*CreateUserResponse, error)
+	// GetUser retrieves a user by ID
 	GetUser(context.Context, *GetUserRequest) (*GetUserResponse, error)
+	// UpdateUser updates an existing user
 	UpdateUser(context.Context, *UpdateUserRequest) (*UpdateUserResponse, error)
+	// DeleteUser deletes a user by ID
 	DeleteUser(context.Context, *DeleteUserRequest) (*DeleteUserResponse, error)
+	// ListUsers retrieves a list of users with pagination
 	ListUsers(context.Context, *ListUsersRequest) (*ListUsersResponse, error)
 	mustEmbedUnimplementedUserServiceServer()
 }
@@ -248,7 +258,7 @@ func _UserService_ListUsers_Handler(srv interface{}, ctx context.Context, dec fu
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var UserService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "user.UserService",
+	ServiceName: "user.v1.UserService",
 	HandlerType: (*UserServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{

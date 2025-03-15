@@ -1,5 +1,5 @@
 version: v1
-name: github.com/amanc1361/bilan-rekar-proto
+name: buf.build/bilan/rekar-proto
 deps:
   - buf.build/googleapis/googleapis
 breaking:
@@ -8,3 +8,6 @@ breaking:
 lint:
   use:
     - DEFAULT
+  except:
+    - PACKAGE_VERSION_SUFFIX
+    - SERVICE_SUFFIX

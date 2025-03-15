@@ -1,17 +1,18 @@
 syntax = "proto3";
 
-package user;
+package user.v1;
+
+import "google/protobuf/timestamp.proto";
+import "proto/common/v1/types.proto";
 
 option go_package = "github.com/bilan-rekar-proto/gen/go/user/v1;userv1";
 
-import "google/protobuf/timestamp.proto";
-
-// User message represents a user in the system
+// User represents a user in the system
 message User {
   string id = 1;
   google.protobuf.Timestamp created_at = 2;
   google.protobuf.Timestamp updated_at = 3;
-  google.protobuf.Timestamp deleted_at = 4;
+  optional google.protobuf.Timestamp deleted_at = 4;
   string name = 5;
   string family = 6;
   string mobile = 7;
@@ -19,9 +20,28 @@ message User {
   string username = 9;
   string password = 10;
   uint32 role_id = 11;
+  common.v1.Address address = 12;
 }
 
-// CreateUserRequest represents a request to create a new user
+// UserService defines the gRPC service for user operations
+service UserService {
+  // CreateUser creates a new user
+  rpc CreateUser(CreateUserRequest) returns (CreateUserResponse) {}
+  
+  // GetUser retrieves a user by ID
+  rpc GetUser(GetUserRequest) returns (GetUserResponse) {}
+  
+  // UpdateUser updates an existing user
+  rpc UpdateUser(UpdateUserRequest) returns (UpdateUserResponse) {}
+  
+  // DeleteUser deletes a user by ID
+  rpc DeleteUser(DeleteUserRequest) returns (DeleteUserResponse) {}
+  
+  // ListUsers retrieves a list of users with pagination
+  rpc ListUsers(ListUsersRequest) returns (ListUsersResponse) {}
+}
+
+// Request/Response messages
 message CreateUserRequest {
   string name = 1;
   string family = 2;
@@ -30,54 +50,40 @@ message CreateUserRequest {
   string username = 5;
   string password = 6;
   uint32 role_id = 7;
+  common.v1.Address address = 8;
 }
 
-// CreateUserResponse represents the response after creating a user
 message CreateUserResponse {
   User user = 1;
 }
 
-// GetUserRequest represents a request to get a user by ID
 message GetUserRequest {
   string id = 1;
 }
 
-// GetUserResponse represents the response containing a user
 message GetUserResponse {
   User user = 1;
 }
 
-// UpdateUserRequest represents a request to update a user
 message UpdateUserRequest {
   User user = 1;
 }
 
-// UpdateUserResponse represents the response after updating a user
 message UpdateUserResponse {
   User user = 1;
 }
 
-// DeleteUserRequest represents a request to delete a user
 message DeleteUserRequest {
   string id = 1;
 }
 
-// DeleteUserResponse represents the response after deleting a user
 message DeleteUserResponse {}
 
-// ListUsersRequest represents a request to list all users
-message ListUsersRequest {}
-
-// ListUsersResponse represents the response containing a list of users
-message ListUsersResponse {
-  repeated User users = 1;
+message ListUsersRequest {
+  common.v1.Pagination pagination = 1;
 }
 
-// UserService defines the gRPC service for user operations
-service UserService {
-  rpc CreateUser(CreateUserRequest) returns (CreateUserResponse);
-  rpc GetUser(GetUserRequest) returns (GetUserResponse);
-  rpc UpdateUser(UpdateUserRequest) returns (UpdateUserResponse);
-  rpc DeleteUser(DeleteUserRequest) returns (DeleteUserResponse);
-  rpc ListUsers(ListUsersRequest) returns (ListUsersResponse);
+message ListUsersResponse {
+  repeated User users = 1;
+  int32 total = 2;
 } 

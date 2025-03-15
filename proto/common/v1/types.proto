@@ -1,0 +1,34 @@
+syntax = "proto3";
+
+package common.v1;
+
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/bilan-rekar-proto/gen/go/common/v1;commonv1";
+
+// Money represents a monetary value with currency
+message Money {
+  int64 amount = 1;
+  string currency = 2;
+}
+
+// Address represents a physical address
+message Address {
+  string street = 1;
+  string city = 2;
+  string state = 3;
+  string country = 4;
+  string postal_code = 5;
+}
+
+// Pagination represents common pagination parameters
+message Pagination {
+  int32 page = 1;
+  int32 per_page = 2;
+}
+
+// TimestampRange represents a time range
+message TimestampRange {
+  google.protobuf.Timestamp start = 1;
+  google.protobuf.Timestamp end = 2;
+} 
