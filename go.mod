@@ -1,5 +1,4 @@
-module github.com/bilan-rekar-proto
-
+module github.com/amanc1361/bilan-rekar-proto
 go 1.24.1
 
 require (

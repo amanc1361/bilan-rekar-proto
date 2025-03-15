@@ -4,7 +4,7 @@
 // 	protoc        (unknown)
 // source: proto/common/v1/types.proto
 
-package commonv1
+package common
 
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"

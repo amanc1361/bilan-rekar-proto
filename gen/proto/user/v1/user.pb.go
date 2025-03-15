@@ -4,10 +4,10 @@
 // 	protoc        (unknown)
 // source: proto/user/v1/user.proto
 
-package userv1
+package user
 
 import (
-	v1 "github.com/bilan-rekar-proto/gen/proto/common/v1"
+	v1 "github.com/amanc1361/bilan-rekar-proto/gen/proto/common/v1"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
