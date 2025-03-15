@@ -5,7 +5,7 @@ package user.v1;
 import "google/protobuf/timestamp.proto";
 import "proto/common/v1/types.proto";
 
-option go_package = "github.com/bilan-rekar-proto/gen/go/user/v1;userv1";
+option go_package = "github.com/bilan-rekar-proto/gen/proto/user/v1;user";
 
 // User represents a user in the system
 message User {
