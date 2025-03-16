@@ -4,7 +4,7 @@
 // 	protoc        (unknown)
 // source: proto/business/v1/business.proto
 
-package businessv1
+package v1
 
 import (
 	v1 "github.com/amanc1361/bilan-rekar-proto/gen/proto/user/v1"
