@@ -5,7 +5,7 @@ package financial.v1;
 import "google/protobuf/timestamp.proto";
 import "proto/user/v1/user.proto";
 
-option go_package = "github.com/bilan-rekar-proto/gen/proto/financial/v1";
+option go_package = "github.com/amanc1361/bilan-rekar-proto/gen/proto/financial/v1";
 
 // FinancialPeriod message
 message FinancialPeriod {
