@@ -4,7 +4,7 @@
 // - protoc             (unknown)
 // source: proto/business/v1/business.proto
 
-package v1
+package businessv1
 
 import (
 	context "context"
