@@ -4,13 +4,10 @@
 // - protoc             (unknown)
 // source: proto/financial/v1/financial.proto
 
-package financialv1
+package v1
 
 import (
-	context "context"	// authpb "github.com/amanc1361/bilan-rekar-proto/gen/proto/auth/v1"
-	// businesspb "github.com/amanc1361/bilan-rekar-proto/gen/proto/business/v1"
-	// financialpb "github.com/amanc1361/bilan-rekar-proto/gen/proto/financial/v1"
-	// userpb "github.com/amanc1361/bilan-rekar-proto/gen/proto/user/v1"
+	context "context"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
