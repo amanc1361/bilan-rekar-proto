@@ -6,7 +6,7 @@ import "google/protobuf/timestamp.proto";
 import "proto/user/v1/user.proto";
 import "proto/financial/v1/financial.proto";
 
-option go_package = "github.com/bilan-rekar-proto/gen/go/business/v1;businessv1";
+option go_package = "github.com/bilan-rekar-proto/gen/go/business/v1";
 
 // Business message
 message Business {
