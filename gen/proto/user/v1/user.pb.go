@@ -4,7 +4,7 @@
 // 	protoc        (unknown)
 // source: proto/user/v1/user.proto
 
-package v1
+package userv1
 
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"

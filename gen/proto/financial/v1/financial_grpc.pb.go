@@ -4,7 +4,7 @@
 // - protoc             (unknown)
 // source: proto/financial/v1/financial.proto
 
-package v1
+package financialv1
 
 import (
 	context "context"

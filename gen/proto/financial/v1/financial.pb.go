@@ -4,7 +4,7 @@
 // 	protoc        (unknown)
 // source: proto/financial/v1/financial.proto
 
-package v1
+package financialv1
 
 import (
 	_ "github.com/amanc1361/bilan-rekar-proto/gen/proto/user/v1"
