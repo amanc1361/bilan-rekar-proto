@@ -33,4 +33,4 @@ message CheckPermissionRequest {
 
 message CheckPermissionResponse {
   bool has_permission = 1;
-}
+} 

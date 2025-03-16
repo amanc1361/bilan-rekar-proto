@@ -1,0 +1,193 @@
+syntax = "proto3";
+
+package financial.v1;
+
+import "google/protobuf/timestamp.proto";
+import "proto/user/v1/user.proto";
+
+option go_package = "github.com/bilan-rekar-proto/gen/proto/financial/v1";
+
+// FinancialPeriod message
+message FinancialPeriod {
+  uint32 id = 1;
+  string name = 2;
+  uint32 business_id = 3;
+  google.protobuf.Timestamp start_date = 4;
+  google.protobuf.Timestamp end_date = 5;
+  bool is_closed = 6;
+  google.protobuf.Timestamp created_at = 7;
+  google.protobuf.Timestamp updated_at = 8;
+}
+
+// Basic CRUD messages
+message CreateFinancialPeriodRequest {
+  string name = 1;
+  uint32 business_id = 2;
+  google.protobuf.Timestamp start_date = 3;
+  google.protobuf.Timestamp end_date = 4;
+}
+
+message CreateFinancialPeriodResponse {
+  FinancialPeriod period = 1;
+}
+
+message GetFinancialPeriodRequest {
+  uint32 id = 1;
+}
+
+message GetFinancialPeriodResponse {
+  FinancialPeriod period = 1;
+}
+
+message UpdateFinancialPeriodRequest {
+  FinancialPeriod period = 1;
+}
+
+message UpdateFinancialPeriodResponse {
+  FinancialPeriod period = 1;
+}
+
+message DeleteFinancialPeriodRequest {
+  uint32 id = 1;
+}
+
+message DeleteFinancialPeriodResponse {
+  bool success = 1;
+}
+
+message ListFinancialPeriodsRequest {
+  uint32 page = 1;
+  uint32 page_size = 2;
+}
+
+message ListFinancialPeriodsResponse {
+  repeated FinancialPeriod periods = 1;
+  uint32 total = 2;
+}
+
+// Business related messages
+message GetFinancialPeriodsByBusinessIDRequest {
+  uint32 business_id = 1;
+  uint32 page = 2;
+  uint32 page_size = 3;
+}
+
+message GetFinancialPeriodsByBusinessIDResponse {
+  repeated FinancialPeriod periods = 1;
+  uint32 total = 2;
+}
+
+message GetActiveFinancialPeriodsByBusinessIDRequest {
+  uint32 business_id = 1;
+  uint32 page = 2;
+  uint32 page_size = 3;
+}
+
+message GetActiveFinancialPeriodsByBusinessIDResponse {
+  repeated FinancialPeriod periods = 1;
+  uint32 total = 2;
+}
+
+message GetFinancialPeriodByBusinessAndNameRequest {
+  uint32 business_id = 1;
+  string name = 2;
+}
+
+// Time related messages
+message GetFinancialPeriodsByDateRangeRequest {
+  google.protobuf.Timestamp start_date = 1;
+  google.protobuf.Timestamp end_date = 2;
+  uint32 page = 3;
+  uint32 page_size = 4;
+}
+
+message GetFinancialPeriodsByDateRangeResponse {
+  repeated FinancialPeriod periods = 1;
+  uint32 total = 2;
+}
+
+message GetOverlappingFinancialPeriodsRequest {
+  uint32 business_id = 1;
+  google.protobuf.Timestamp start_date = 2;
+  google.protobuf.Timestamp end_date = 3;
+}
+
+message GetOverlappingFinancialPeriodsResponse {
+  repeated FinancialPeriod periods = 1;
+  uint32 total = 2;
+}
+
+// Status operation messages
+message CloseFinancialPeriodRequest {
+  uint32 id = 1;
+}
+
+message CloseFinancialPeriodResponse {
+  bool success = 1;
+}
+
+message ReopenFinancialPeriodRequest {
+  uint32 id = 1;
+}
+
+message ReopenFinancialPeriodResponse {
+  bool success = 1;
+}
+
+// User access messages
+message GetFinancialPeriodsByUserIDRequest {
+  uint32 user_id = 1;
+  uint32 page = 2;
+  uint32 page_size = 3;
+}
+
+message GetFinancialPeriodsByUserIDResponse {
+  repeated FinancialPeriod periods = 1;
+  uint32 total = 2;
+}
+
+message AddUserToFinancialPeriodRequest {
+  uint32 period_id = 1;
+  uint32 user_id = 2;
+}
+
+message AddUserToFinancialPeriodResponse {
+  bool success = 1;
+}
+
+message RemoveUserFromFinancialPeriodRequest {
+  uint32 period_id = 1;
+  uint32 user_id = 2;
+}
+
+message RemoveUserFromFinancialPeriodResponse {
+  bool success = 1;
+}
+
+// FinancialPeriodService provides financial period management functionality
+service FinancialPeriodService {
+  // Basic CRUD operations
+  rpc CreateFinancialPeriod(CreateFinancialPeriodRequest) returns (CreateFinancialPeriodResponse) {}
+  rpc GetFinancialPeriod(GetFinancialPeriodRequest) returns (GetFinancialPeriodResponse) {}
+  rpc UpdateFinancialPeriod(UpdateFinancialPeriodRequest) returns (UpdateFinancialPeriodResponse) {}
+  rpc DeleteFinancialPeriod(DeleteFinancialPeriodRequest) returns (DeleteFinancialPeriodResponse) {}
+  rpc ListFinancialPeriods(ListFinancialPeriodsRequest) returns (ListFinancialPeriodsResponse) {}
+
+  // Business related operations
+  rpc GetFinancialPeriodsByBusinessID(GetFinancialPeriodsByBusinessIDRequest) returns (GetFinancialPeriodsByBusinessIDResponse) {}
+  rpc GetActiveFinancialPeriodsByBusinessID(GetActiveFinancialPeriodsByBusinessIDRequest) returns (GetActiveFinancialPeriodsByBusinessIDResponse) {}
+  rpc GetFinancialPeriodByBusinessAndName(GetFinancialPeriodByBusinessAndNameRequest) returns (GetFinancialPeriodResponse) {}
+
+  // Time related operations
+  rpc GetFinancialPeriodsByDateRange(GetFinancialPeriodsByDateRangeRequest) returns (GetFinancialPeriodsByDateRangeResponse) {}
+  rpc GetOverlappingFinancialPeriods(GetOverlappingFinancialPeriodsRequest) returns (GetOverlappingFinancialPeriodsResponse) {}
+
+  // Status operations
+  rpc CloseFinancialPeriod(CloseFinancialPeriodRequest) returns (CloseFinancialPeriodResponse) {}
+  rpc ReopenFinancialPeriod(ReopenFinancialPeriodRequest) returns (ReopenFinancialPeriodResponse) {}
+
+  // User access operations
+  rpc GetFinancialPeriodsByUserID(GetFinancialPeriodsByUserIDRequest) returns (GetFinancialPeriodsByUserIDResponse) {}
+  rpc AddUserToFinancialPeriod(AddUserToFinancialPeriodRequest) returns (AddUserToFinancialPeriodResponse) {}
+  rpc RemoveUserFromFinancialPeriod(RemoveUserFromFinancialPeriodRequest) returns (RemoveUserFromFinancialPeriodResponse) {}
+} 

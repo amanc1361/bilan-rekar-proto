@@ -3,45 +3,75 @@ syntax = "proto3";
 package user.v1;
 
 import "google/protobuf/timestamp.proto";
-import "proto/common/v1/types.proto";
 
-option go_package = "github.com/bilan-rekar-proto/gen/proto/user/v1;user";
+option go_package = "github.com/amanc1361/bilan-rekar-proto/gen/proto/user/v1";
 
-// User represents a user in the system
+// User message represents a user in the system
 message User {
-  string id = 1;
-  google.protobuf.Timestamp created_at = 2;
-  google.protobuf.Timestamp updated_at = 3;
-  optional google.protobuf.Timestamp deleted_at = 4;
-  string name = 5;
-  string family = 6;
-  string mobile = 7;
-  string email = 8;
-  string username = 9;
-  string password = 10;
-  uint32 role_id = 11;
-  common.v1.Address address = 12;
+  uint32 id = 1;
+  string name = 2;
+  string family = 3;
+  string mobile = 4;
+  string email = 5;
+  string username = 6;
+  string password = 7;
+  uint32 role_id = 8;
+  google.protobuf.Timestamp created_at = 9;
+  google.protobuf.Timestamp updated_at = 10;
 }
 
-// UserService defines the gRPC service for user operations
-service UserService {
-  // CreateUser creates a new user
-  rpc CreateUser(CreateUserRequest) returns (CreateUserResponse) {}
-  
-  // GetUser retrieves a user by ID
-  rpc GetUser(GetUserRequest) returns (GetUserResponse) {}
-  
-  // UpdateUser updates an existing user
-  rpc UpdateUser(UpdateUserRequest) returns (UpdateUserResponse) {}
-  
-  // DeleteUser deletes a user by ID
-  rpc DeleteUser(DeleteUserRequest) returns (DeleteUserResponse) {}
-  
-  // ListUsers retrieves a list of users with pagination
-  rpc ListUsers(ListUsersRequest) returns (ListUsersResponse) {}
+// Role message represents a user role
+message Role {
+  uint32 id = 1;
+  string name = 2;
+  string description = 3;
+  repeated string permissions = 4;
+  google.protobuf.Timestamp created_at = 5;
+  google.protobuf.Timestamp updated_at = 6;
 }
 
-// Request/Response messages
+// Business message represents a business entity
+message Business {
+  uint32 id = 1;
+  uint32 owner_id = 2;
+  string name = 3;
+  string description = 4;
+  google.protobuf.Timestamp created_at = 5;
+  google.protobuf.Timestamp updated_at = 6;
+}
+
+// FinancialPeriod message represents a financial period
+message FinancialPeriod {
+  uint32 id = 1;
+  uint32 business_id = 2;
+  string name = 3;
+  google.protobuf.Timestamp start = 4;
+  google.protobuf.Timestamp end = 5;
+  string description = 6;
+  bool is_closed = 7;
+  google.protobuf.Timestamp created_at = 8;
+  google.protobuf.Timestamp updated_at = 9;
+}
+
+// UserBusinessAccess message represents user-business access relationship
+message UserBusinessAccess {
+  uint32 id = 1;
+  uint32 user_id = 2;
+  uint32 business_id = 3;
+  google.protobuf.Timestamp created_at = 4;
+  google.protobuf.Timestamp updated_at = 5;
+}
+
+// UserFinancialAccess message represents user-financial period access relationship
+message UserFinancialAccess {
+  uint32 id = 1;
+  uint32 user_id = 2;
+  uint32 period_id = 3;
+  google.protobuf.Timestamp created_at = 4;
+  google.protobuf.Timestamp updated_at = 5;
+}
+
+// Request/Response messages for User operations
 message CreateUserRequest {
   string name = 1;
   string family = 2;
@@ -50,7 +80,6 @@ message CreateUserRequest {
   string username = 5;
   string password = 6;
   uint32 role_id = 7;
-  common.v1.Address address = 8;
 }
 
 message CreateUserResponse {
@@ -58,7 +87,7 @@ message CreateUserResponse {
 }
 
 message GetUserRequest {
-  string id = 1;
+  uint32 id = 1;
 }
 
 message GetUserResponse {
@@ -74,16 +103,196 @@ message UpdateUserResponse {
 }
 
 message DeleteUserRequest {
-  string id = 1;
+  uint32 id = 1;
 }
 
-message DeleteUserResponse {}
+message DeleteUserResponse {
+  bool success = 1;
+}
 
 message ListUsersRequest {
-  common.v1.Pagination pagination = 1;
+  uint32 page = 1;
+  uint32 page_size = 2;
 }
 
 message ListUsersResponse {
   repeated User users = 1;
-  int32 total = 2;
+  uint32 total = 2;
+}
+
+// Authentication related messages
+message GetUserByEmailRequest {
+  string email = 1;
+}
+
+message GetUserByUsernameRequest {
+  string username = 1;
+}
+
+message GetUserByEmailAndPasswordRequest {
+  string email = 1;
+  string password = 2;
+}
+
+message GetUserByMobileRequest {
+  string mobile = 1;
+}
+
+message ChangePasswordRequest {
+  uint32 user_id = 1;
+  string old_password = 2;
+  string new_password = 3;
+}
+
+message ResetPasswordRequest {
+  uint32 user_id = 1;
+  string new_password = 2;
+}
+
+// Role related messages
+message GetUsersByRoleIDRequest {
+  uint32 role_id = 1;
+  uint32 page = 2;
+  uint32 page_size = 3;
+}
+
+message AssignRoleToUserRequest {
+  uint32 user_id = 1;
+  uint32 role_id = 2;
+}
+
+message RemoveRoleFromUserRequest {
+  uint32 user_id = 1;
+}
+
+message GetUserRoleRequest {
+  uint32 user_id = 1;
+}
+
+// Business related messages
+message GetUserBusinessesRequest {
+  uint32 user_id = 1;
+  uint32 page = 2;
+  uint32 page_size = 3;
+}
+
+message GetUserBusinessesResponse {
+  repeated Business businesses = 1;
+  uint32 total = 2;
+}
+
+// Financial period related messages
+message GetUserFinancialPeriodsRequest {
+  uint32 user_id = 1;
+  uint32 page = 2;
+  uint32 page_size = 3;
+}
+
+message GetUserFinancialPeriodsResponse {
+  repeated FinancialPeriod periods = 1;
+  uint32 total = 2;
+}
+
+// Search and filter messages
+message SearchUsersRequest {
+  string query = 1;
+  uint32 page = 2;
+  uint32 page_size = 3;
+}
+
+message GetUsersByStatusRequest {
+  bool active = 1;
+  uint32 page = 2;
+  uint32 page_size = 3;
+}
+
+message GetUsersCreatedBetweenRequest {
+  google.protobuf.Timestamp start_date = 1;
+  google.protobuf.Timestamp end_date = 2;
+  uint32 page = 3;
+  uint32 page_size = 4;
+}
+
+// Batch operation messages
+message BatchCreateUsersRequest {
+  repeated CreateUserRequest users = 1;
+}
+
+message BatchUpdateUsersRequest {
+  repeated User users = 1;
+}
+
+message BatchDeleteUsersRequest {
+  repeated uint32 user_ids = 1;
+}
+
+message BatchOperationResponse {
+  bool success = 1;
+  repeated string errors = 2;
+}
+
+// Business user related messages
+message GetBusinessUsersRequest {
+  uint32 business_id = 1;
+  uint32 page = 2;
+  uint32 page_size = 3;
+}
+
+message GetBusinessUsersResponse {
+  repeated User users = 1;
+  uint32 total = 2;
+}
+
+// Financial period user related messages
+message GetFinancialPeriodUsersRequest {
+  uint32 period_id = 1;
+  uint32 page = 2;
+  uint32 page_size = 3;
+}
+
+message GetFinancialPeriodUsersResponse {
+  repeated User users = 1;
+  uint32 total = 2;
+}
+
+// Update UserService
+service UserService {
+  // Existing CRUD operations
+  rpc CreateUser(CreateUserRequest) returns (CreateUserResponse) {}
+  rpc GetUser(GetUserRequest) returns (GetUserResponse) {}
+  rpc UpdateUser(UpdateUserRequest) returns (UpdateUserResponse) {}
+  rpc DeleteUser(DeleteUserRequest) returns (DeleteUserResponse) {}
+  rpc ListUsers(ListUsersRequest) returns (ListUsersResponse) {}
+
+  // Authentication operations
+  rpc GetUserByEmail(GetUserByEmailRequest) returns (GetUserResponse) {}
+  rpc GetUserByUsername(GetUserByUsernameRequest) returns (GetUserResponse) {}
+  rpc GetUserByEmailAndPassword(GetUserByEmailAndPasswordRequest) returns (GetUserResponse) {}
+  rpc GetUserByMobile(GetUserByMobileRequest) returns (GetUserResponse) {}
+  rpc ChangePassword(ChangePasswordRequest) returns (DeleteUserResponse) {}
+  rpc ResetPassword(ResetPasswordRequest) returns (DeleteUserResponse) {}
+
+  // Role operations
+  rpc GetUsersByRoleID(GetUsersByRoleIDRequest) returns (ListUsersResponse) {}
+  rpc AssignRoleToUser(AssignRoleToUserRequest) returns (DeleteUserResponse) {}
+  rpc RemoveRoleFromUser(RemoveRoleFromUserRequest) returns (DeleteUserResponse) {}
+  rpc GetUserRole(GetUserRoleRequest) returns (Role) {}
+
+  // Business operations
+  rpc GetUserBusinesses(GetUserBusinessesRequest) returns (GetUserBusinessesResponse) {}
+  rpc GetUsersByBusinessID(GetBusinessUsersRequest) returns (GetBusinessUsersResponse) {}
+
+  // Financial period operations
+  rpc GetUserFinancialPeriods(GetUserFinancialPeriodsRequest) returns (GetUserFinancialPeriodsResponse) {}
+  rpc GetUsersByFinancialPeriodID(GetFinancialPeriodUsersRequest) returns (GetFinancialPeriodUsersResponse) {}
+
+  // Search and filter operations
+  rpc SearchUsers(SearchUsersRequest) returns (ListUsersResponse) {}
+  rpc GetUsersByStatus(GetUsersByStatusRequest) returns (ListUsersResponse) {}
+  rpc GetUsersCreatedBetween(GetUsersCreatedBetweenRequest) returns (ListUsersResponse) {}
+
+  // Batch operations
+  rpc BatchCreateUsers(BatchCreateUsersRequest) returns (BatchOperationResponse) {}
+  rpc BatchUpdateUsers(BatchUpdateUsersRequest) returns (BatchOperationResponse) {}
+  rpc BatchDeleteUsers(BatchDeleteUsersRequest) returns (BatchOperationResponse) {}
 } 

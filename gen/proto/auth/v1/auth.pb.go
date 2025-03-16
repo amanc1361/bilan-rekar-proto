@@ -4,7 +4,7 @@
 // 	protoc        (unknown)
 // source: proto/auth/v1/auth.proto
 
-package auth
+package v1
 
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
