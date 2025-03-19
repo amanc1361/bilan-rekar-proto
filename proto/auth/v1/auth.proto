@@ -6,11 +6,32 @@ option go_package = "github.com/amanc1361/bilan-rekar-proto/gen/proto/auth/v1";
 
 // AuthService provides authentication and authorization functionality
 service AuthService {
+  // Login authenticates a user and returns a JWT token
+  rpc Login(LoginRequest) returns (LoginResponse) {}
+
   // ValidateToken validates a JWT token and returns the claims
   rpc ValidateToken(ValidateTokenRequest) returns (ValidateTokenResponse) {}
   
+  // RefreshToken refreshes an existing JWT token
+  rpc RefreshToken(RefreshTokenRequest) returns (RefreshTokenResponse) {}
+
   // CheckPermission checks if a user has a specific permission
   rpc CheckPermission(CheckPermissionRequest) returns (CheckPermissionResponse) {}
+}
+
+message LoginRequest {
+  string username = 1;
+  string password = 2;
+}
+
+message LoginResponse {
+  string token = 1;
+  uint32 user_id = 2;
+  string username = 3;
+  string email = 4;
+  uint32 role_id = 5;
+  string role_name = 6;
+  repeated string permissions = 7;
 }
 
 message ValidateTokenRequest {
@@ -24,6 +45,14 @@ message ValidateTokenResponse {
   uint32 role_id = 4;
   string role_name = 5;
   repeated string permissions = 6;
+}
+
+message RefreshTokenRequest {
+  string token = 1;
+}
+
+message RefreshTokenResponse {
+  string token = 1;
 }
 
 message CheckPermissionRequest {
