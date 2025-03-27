@@ -1,0 +1,68 @@
+syntax = "proto3";
+
+package auth.v1;
+
+option go_package = "github.com/amanc1361/bilan-rekar-proto/gen/proto/phone/v1";
+
+
+// سرویس مربوط به تایید شماره تلفن و OTP
+service PhoneVerificationService {
+  // ارسال کد OTP به شماره تلفن
+  rpc SendOTP(SendOTPRequest) returns (SendOTPResponse);
+  
+  // تایید کد OTP
+  rpc VerifyOTP(VerifyOTPRequest) returns (VerifyOTPResponse);
+  
+  // ثبت‌نام کاربر با شماره موبایل تایید شده
+  rpc RegisterWithPhone(RegisterWithPhoneRequest) returns (RegisterWithPhoneResponse);
+}
+
+// پیام‌های مربوط به SendOTP
+message SendOTPRequest {
+  string phone = 1;
+}
+
+message SendOTPResponse {
+  bool success = 1;
+  string message = 2;
+  int32 expires_in_seconds = 3; // مدت زمان اعتبار کد (120 ثانیه)
+}
+
+// پیام‌های مربوط به VerifyOTP
+message VerifyOTPRequest {
+  string phone = 1;
+  string code = 2;
+}
+
+message VerifyOTPResponse {
+  bool success = 1;
+  string message = 2;
+  string verification_token = 3; // توکن تایید برای استفاده در ثبت‌نام
+}
+
+// پیام‌های مربوط به RegisterWithPhone
+message RegisterWithPhoneRequest {
+  string name = 1;
+  string family = 2;
+  string phone = 3;
+  string email = 4;
+  string username = 5;
+  string password = 6;
+  string verification_token = 7; // توکن تایید از مرحله قبل
+}
+
+message RegisterWithPhoneResponse {
+  bool success = 1;
+  string message = 2;
+  UserResponse user = 3; // اطلاعات کاربر ثبت‌نام شده
+}
+
+// مدل کاربر در پاسخ
+message UserResponse {
+  uint32 id = 1;
+  string name = 2;
+  string family = 3;
+  string username = 4;
+  string email = 5;
+  string phone = 6;
+} 
