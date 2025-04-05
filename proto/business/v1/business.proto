@@ -2,75 +2,49 @@ syntax = "proto3";
 
 package business.v1;
 
-import "google/protobuf/timestamp.proto";
+
+import "google/protobuf/empty.proto";
 import "proto/user/v1/user.proto";
 import "proto/financial/v1/financial.proto";
 
 option go_package = "github.com/amanc1361/bilan-rekar-proto/gen/proto/business/v1";
 
-// Business message
+
+
+// Business message represents a business entity
 message Business {
-  uint32 id = 1;
-  string name = 2;
-  uint32 owner_id = 3;
-  google.protobuf.Timestamp created_at = 4;
-  google.protobuf.Timestamp updated_at = 5;
+  uint64 id = 1;
+  uint64 owner_id = 2;
+  string name = 3;
+  string description = 4;
+  
+
 }
 
-// Request/Response messages for Business operations
+// Request and response messages for BusinessService
+
 message CreateBusinessRequest {
   string name = 1;
-  uint32 owner_id = 2;
+  uint64 owner_id = 2;
+  string description = 3;
 }
 
-message CreateBusinessResponse {
+message BusinessResponse {
   Business business = 1;
+  bool success = 2;
+  string message = 3;
 }
 
-message GetBusinessRequest {
-  uint32 id = 1;
+message GetBusinessByIDRequest {
+  uint64 id = 1;
 }
 
-message GetBusinessResponse {
-  Business business = 1;
-}
-
-message UpdateBusinessRequest {
-  Business business = 1;
-}
-
-message UpdateBusinessResponse {
-  Business business = 1;
-}
-
-message DeleteBusinessRequest {
-  uint32 id = 1;
-}
-
-message DeleteBusinessResponse {
-  bool success = 1;
-}
-
-message ListBusinessesRequest {
-  uint32 page = 1;
-  uint32 page_size = 2;
-}
-
-message ListBusinessesResponse {
-  repeated Business businesses = 1;
-  uint32 total = 2;
-}
-
-// Business specific messages
 message GetBusinessesByOwnerIDRequest {
-  uint32 owner_id = 1;
-  uint32 page = 2;
-  uint32 page_size = 3;
+  uint64 owner_id = 1;
 }
 
 message GetBusinessesByOwnerIDResponse {
   repeated Business businesses = 1;
-  uint32 total = 2;
 }
 
 message GetBusinessByNameRequest {
@@ -78,70 +52,74 @@ message GetBusinessByNameRequest {
 }
 
 message GetBusinessWithUsersRequest {
-  uint32 id = 1;
+  uint64 id = 1;
 }
 
-message GetBusinessWithUsersResponse {
-  Business business = 1;
-  repeated user.v1.User users = 2;
-}
+
 
 message GetBusinessWithFinancialPeriodsRequest {
-  uint32 id = 1;
+  uint64 id = 1;
+}
+
+message FinancialPeriod {
+  uint64 id = 1;
+  string period = 2;
+  int32 year = 3;
+  // Other financial period fields as needed
 }
 
 message GetBusinessWithFinancialPeriodsResponse {
   Business business = 1;
-  repeated financial.v1.FinancialPeriod periods = 2;
+  repeated FinancialPeriod financial_periods = 2;
 }
 
-// User related messages
 message AddUserToBusinessRequest {
-  uint32 business_id = 1;
-  uint32 user_id = 2;
-}
-
-message AddUserToBusinessResponse {
-  bool success = 1;
+  uint64 business_id = 1;
+  uint64 user_id = 2;
 }
 
 message RemoveUserFromBusinessRequest {
-  uint32 business_id = 1;
-  uint32 user_id = 2;
-}
-
-message RemoveUserFromBusinessResponse {
-  bool success = 1;
+  uint64 business_id = 1;
+  uint64 user_id = 2;
 }
 
 message GetBusinessUsersRequest {
-  uint32 business_id = 1;
-  uint32 page = 2;
-  uint32 page_size = 3;
+  uint64 business_id = 1;
 }
 
-message GetBusinessUsersResponse {
-  repeated user.v1.User users = 1;
-  uint32 total = 2;
+
+
+message GetBusinessFinancialPeriodsRequest {
+  uint64 business_id = 1;
 }
 
-// BusinessService provides business management functionality
+message GetBusinessFinancialPeriodsResponse {
+  uint64 business_id = 1;
+  repeated FinancialPeriod financial_periods = 2;
+}
+
+message StatusResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+// Business service
 service BusinessService {
   // Basic CRUD operations
-  rpc CreateBusiness(CreateBusinessRequest) returns (CreateBusinessResponse) {}
-  rpc GetBusiness(GetBusinessRequest) returns (GetBusinessResponse) {}
-  rpc UpdateBusiness(UpdateBusinessRequest) returns (UpdateBusinessResponse) {}
-  rpc DeleteBusiness(DeleteBusinessRequest) returns (DeleteBusinessResponse) {}
-  rpc ListBusinesses(ListBusinessesRequest) returns (ListBusinessesResponse) {}
-
+  rpc CreateBusiness(CreateBusinessRequest) returns (BusinessResponse);
+  rpc GetBusinessByID(GetBusinessByIDRequest) returns (BusinessResponse);
+  
   // Business specific operations
-  rpc GetBusinessesByOwnerID(GetBusinessesByOwnerIDRequest) returns (GetBusinessesByOwnerIDResponse) {}
-  rpc GetBusinessByName(GetBusinessByNameRequest) returns (GetBusinessResponse) {}
-  rpc GetBusinessWithUsers(GetBusinessWithUsersRequest) returns (GetBusinessWithUsersResponse) {}
-  rpc GetBusinessWithFinancialPeriods(GetBusinessWithFinancialPeriodsRequest) returns (GetBusinessWithFinancialPeriodsResponse) {}
-
-  // User related operations
-  rpc AddUserToBusiness(AddUserToBusinessRequest) returns (AddUserToBusinessResponse) {}
-  rpc RemoveUserFromBusiness(RemoveUserFromBusinessRequest) returns (RemoveUserFromBusinessResponse) {}
-  rpc GetBusinessUsers(GetBusinessUsersRequest) returns (GetBusinessUsersResponse) {}
-} 
+  rpc GetBusinessesByOwnerID(GetBusinessesByOwnerIDRequest) returns (GetBusinessesByOwnerIDResponse);
+  rpc GetBusinessByName(GetBusinessByNameRequest) returns (BusinessResponse);
+ /// rpc GetBusinessWithUsers(GetBusinessWithUsersRequest) returns (GetBusinessWithUsersResponse);
+  rpc GetBusinessWithFinancialPeriods(GetBusinessWithFinancialPeriodsRequest) returns (GetBusinessWithFinancialPeriodsResponse);
+  
+  // User management
+  rpc AddUserToBusiness(AddUserToBusinessRequest) returns (StatusResponse);
+  rpc RemoveUserFromBusiness(RemoveUserFromBusinessRequest) returns (StatusResponse);
+  //rpc GetBusinessUsers(GetBusinessUsersRequest) returns (GetBusinessUsersResponse);
+  
+  // Financial period management
+  rpc GetBusinessFinancialPeriods(GetBusinessFinancialPeriodsRequest) returns (GetBusinessFinancialPeriodsResponse);
+}
