@@ -1,11 +1,11 @@
 syntax = "proto3";
 
-package user.v1;
+package user;
+
+option go_package = "github.com/amanc1361/bilan-rekar/gen/proto/user/v1";
 
 import "google/protobuf/timestamp.proto";
 import "google/protobuf/empty.proto";
-
-option go_package = "github.com/amanc1361/bilan-rekar-proto/gen/proto/user/v1";
 
 // User message represents a user entity
 message User {
@@ -14,15 +14,12 @@ message User {
   string family = 3;
   string mobile = 4;
   optional string email = 5;
-  string username = 6;
+  optional string username = 6;
   // Password is not included in responses
   string password = 7;
   uint64 role_id = 8;
   Role role = 9;
-  
 
- 
- 
 }
 
 // Role message represents a user role
@@ -33,14 +30,73 @@ message Role {
   repeated string permissions = 4;
 }
 
-// Request and response messages for UserService
+// Step 1: Mobile Registration
+message RegisterMobileRequest {
+  string mobile = 1;
+}
 
+message RegisterMobileResponse {
+  string mobile = 1;
+  string message = 2;
+  bool success = 3;
+}
+
+// Step 2: Verify OTP and create account with username/password
+message VerifyAndCreateUserRequest {
+  string mobile = 1;
+  string otp = 2;
+  string username = 3;
+  string password = 4;
+  // Optional fields that can be set at this stage
+  optional string name = 5;
+  optional string family = 6;
+  optional string email = 7;
+}
+
+message VerifyAndCreateUserResponse {
+  bool success = 1;
+  string message = 2;
+  User user = 3;
+}
+
+// Step 3: Admin creating another user (simplified process)
+message AdminCreateUserRequest {
+  uint64 admin_id = 1;      // ID of the admin creating this user
+  string mobile = 2;        // Only required field for a new user
+  
+  // All other fields are optional
+  optional string name = 3;
+  optional string family = 4;
+  optional string email = 5;
+  optional string username = 6;
+  optional string password = 7;
+  optional uint64 role_id = 8;
+ 
+}
+
+message AdminCreateUserResponse {
+  bool success = 1;
+  string message = 2;
+  User user = 3;
+}
+
+// Request and response messages for UserService
 message GetUserByIDRequest {
   string id = 1;
 }
 
 message CreateUserRequest {
-  User user = 1;
+  // Only required fields for user creation
+  string name = 1;
+  string family = 2;
+  string mobile = 3;
+  string password = 4;
+  uint64 role_id = 5;
+  
+  // Optional fields
+  optional string email = 6;
+  optional string username = 7;
+
 }
 
 message UpdateUserRequest {
@@ -69,10 +125,6 @@ message ActivateUserByEmailRequest {
 
 message DeactivateUserRequest {
   uint64 user_id = 1;
-}
-
-message RegisterWithMobileOTPRequest {
-  User user = 1;
 }
 
 message VerifyMobileOTPRequest {
@@ -116,79 +168,24 @@ message GetUserRoleRequest {
   int32 user_id = 1;
 }
 
-message GetUserBusinessesRequest {
-  int32 user_id = 1;
+message UserResponse {
+  User user = 1;
 }
 
-message Business {
-  uint64 id = 1;
-  string name = 2;
-  // Other business fields as needed
+message RoleResponse {
+  Role role = 1;
 }
 
-message GetUserBusinessesResponse {
-  repeated Business businesses = 1;
-}
-
-message GetUsersByBusinessIDRequest {
-  uint64 business_id = 1;
-}
-
-message GetUsersByBusinessIDResponse {
-  repeated User users = 1;
-}
-
-message GetUserFinancialPeriodsRequest {
-  int32 user_id = 1;
-}
-
-message FinancialPeriod {
-  uint64 id = 1;
-  string period = 2;
-  int32 year = 3;
-  // Other financial period fields as needed
-}
-
-message GetUserFinancialPeriodsResponse {
-  repeated FinancialPeriod financial_periods = 1;
-}
-
-message GetUsersByFinancialPeriodIDRequest {
-  uint64 period_id = 1;
-}
-
-message GetUsersByFinancialPeriodIDResponse {
-  repeated User users = 1;
-}
-
-message SearchUsersRequest {
-  string query = 1;
-}
-
-message SearchUsersResponse {
-  repeated User users = 1;
-}
-
-message GetUsersByStatusRequest {
-  bool active = 1;
-}
-
-message GetUsersByStatusResponse {
-  repeated User users = 1;
-}
-
-message GetUsersCreatedBetweenRequest {
-  string start_date = 1;
-  string end_date = 2;
-}
-
-message GetUsersCreatedBetweenResponse {
-  repeated User users = 1;
+message StatusResponse {
+  bool success = 1;
+  string message = 2;
 }
 
 // OTP Service Messages
 message GenerateOTPRequest {
-  uint64 user_id = 1;
+  // Either user_id or mobile must be provided
+  optional uint64 user_id = 1; 
+  optional string mobile = 2;
 }
 
 message GenerateOTPResponse {
@@ -208,19 +205,6 @@ message ResendOTPRequest {
   uint64 user_id = 1;
 }
 
-message UserResponse {
-  User user = 1;
-}
-
-message RoleResponse {
-  Role role = 1;
-}
-
-message StatusResponse {
-  bool success = 1;
-  string message = 2;
-}
-
 // Main User service
 service UserService {
   // User CRUD operations
@@ -237,7 +221,6 @@ service UserService {
   rpc DeactivateUser(DeactivateUserRequest) returns (StatusResponse);
   
   // Authentication & OTP
-  rpc RegisterWithMobileOTP(RegisterWithMobileOTPRequest) returns (UserResponse);
   rpc VerifyMobileOTP(VerifyMobileOTPRequest) returns (StatusResponse);
   
   // User lookup
@@ -254,18 +237,10 @@ service UserService {
   rpc RemoveRoleFromUser(RemoveRoleFromUserRequest) returns (StatusResponse);
   rpc GetUserRole(GetUserRoleRequest) returns (RoleResponse);
   
-  // Business access
-  rpc GetUserBusinesses(GetUserBusinessesRequest) returns (GetUserBusinessesResponse);
-  rpc GetUsersByBusinessID(GetUsersByBusinessIDRequest) returns (GetUsersByBusinessIDResponse);
-  
-  // Financial period access
-  rpc GetUserFinancialPeriods(GetUserFinancialPeriodsRequest) returns (GetUserFinancialPeriodsResponse);
-  rpc GetUsersByFinancialPeriodID(GetUsersByFinancialPeriodIDRequest) returns (GetUsersByFinancialPeriodIDResponse);
-  
-  // Search and filter
-  rpc SearchUsers(SearchUsersRequest) returns (SearchUsersResponse);
-  rpc GetUsersByStatus(GetUsersByStatusRequest) returns (GetUsersByStatusResponse);
-  rpc GetUsersCreatedBetween(GetUsersCreatedBetweenRequest) returns (GetUsersCreatedBetweenResponse);
+  // Multi-step registration process
+  rpc RegisterMobile(RegisterMobileRequest) returns (RegisterMobileResponse);
+  rpc VerifyAndCreateUser(VerifyAndCreateUserRequest) returns (VerifyAndCreateUserResponse);
+  rpc AdminCreateUser(AdminCreateUserRequest) returns (AdminCreateUserResponse);
 }
 
 // OTP Service
@@ -273,10 +248,18 @@ service UserOTPService {
   rpc GenerateOTP(GenerateOTPRequest) returns (GenerateOTPResponse);
   rpc VerifyOTP(VerifyOTPRequest) returns (VerifyOTPResponse);
   rpc ResendOTP(ResendOTPRequest) returns (StatusResponse);
+  
+  // New method specifically for registration
+  rpc GenerateRegistrationOTP(RegisterMobileRequest) returns (StatusResponse);
+  rpc VerifyRegistrationOTP(VerifyOTPRequest) returns (VerifyOTPResponse);
 }
 
 // SMS Service
 service UserSMSService {
+  // Updated to use the revised GenerateOTPRequest
   rpc SendOTP(GenerateOTPRequest) returns (StatusResponse);
   rpc ResendOTP(ResendOTPRequest) returns (StatusResponse);
-}
+  
+  // New method for registration SMS
+  rpc SendRegistrationOTP(RegisterMobileRequest) returns (StatusResponse);
+} 

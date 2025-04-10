@@ -19,14 +19,16 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	BusinessService_CreateBusiness_FullMethodName                  = "/business.v1.BusinessService/CreateBusiness"
-	BusinessService_GetBusinessByID_FullMethodName                 = "/business.v1.BusinessService/GetBusinessByID"
-	BusinessService_GetBusinessesByOwnerID_FullMethodName          = "/business.v1.BusinessService/GetBusinessesByOwnerID"
-	BusinessService_GetBusinessByName_FullMethodName               = "/business.v1.BusinessService/GetBusinessByName"
-	BusinessService_GetBusinessWithFinancialPeriods_FullMethodName = "/business.v1.BusinessService/GetBusinessWithFinancialPeriods"
-	BusinessService_AddUserToBusiness_FullMethodName               = "/business.v1.BusinessService/AddUserToBusiness"
-	BusinessService_RemoveUserFromBusiness_FullMethodName          = "/business.v1.BusinessService/RemoveUserFromBusiness"
-	BusinessService_GetBusinessFinancialPeriods_FullMethodName     = "/business.v1.BusinessService/GetBusinessFinancialPeriods"
+	BusinessService_CreateBusiness_FullMethodName                  = "/business.BusinessService/CreateBusiness"
+	BusinessService_GetBusinessByID_FullMethodName                 = "/business.BusinessService/GetBusinessByID"
+	BusinessService_GetBusinessesByOwnerID_FullMethodName          = "/business.BusinessService/GetBusinessesByOwnerID"
+	BusinessService_GetBusinessByName_FullMethodName               = "/business.BusinessService/GetBusinessByName"
+	BusinessService_GetBusinessWithUsers_FullMethodName            = "/business.BusinessService/GetBusinessWithUsers"
+	BusinessService_GetBusinessWithFinancialPeriods_FullMethodName = "/business.BusinessService/GetBusinessWithFinancialPeriods"
+	BusinessService_AddUserToBusiness_FullMethodName               = "/business.BusinessService/AddUserToBusiness"
+	BusinessService_RemoveUserFromBusiness_FullMethodName          = "/business.BusinessService/RemoveUserFromBusiness"
+	BusinessService_GetBusinessUsers_FullMethodName                = "/business.BusinessService/GetBusinessUsers"
+	BusinessService_GetBusinessFinancialPeriods_FullMethodName     = "/business.BusinessService/GetBusinessFinancialPeriods"
 )
 
 // BusinessServiceClient is the client API for BusinessService service.
@@ -41,11 +43,12 @@ type BusinessServiceClient interface {
 	// Business specific operations
 	GetBusinessesByOwnerID(ctx context.Context, in *GetBusinessesByOwnerIDRequest, opts ...grpc.CallOption) (*GetBusinessesByOwnerIDResponse, error)
 	GetBusinessByName(ctx context.Context, in *GetBusinessByNameRequest, opts ...grpc.CallOption) (*BusinessResponse, error)
-	// / rpc GetBusinessWithUsers(GetBusinessWithUsersRequest) returns (GetBusinessWithUsersResponse);
+	GetBusinessWithUsers(ctx context.Context, in *GetBusinessWithUsersRequest, opts ...grpc.CallOption) (*GetBusinessWithUsersResponse, error)
 	GetBusinessWithFinancialPeriods(ctx context.Context, in *GetBusinessWithFinancialPeriodsRequest, opts ...grpc.CallOption) (*GetBusinessWithFinancialPeriodsResponse, error)
 	// User management
 	AddUserToBusiness(ctx context.Context, in *AddUserToBusinessRequest, opts ...grpc.CallOption) (*StatusResponse, error)
 	RemoveUserFromBusiness(ctx context.Context, in *RemoveUserFromBusinessRequest, opts ...grpc.CallOption) (*StatusResponse, error)
+	GetBusinessUsers(ctx context.Context, in *GetBusinessUsersRequest, opts ...grpc.CallOption) (*GetBusinessUsersResponse, error)
 	// Financial period management
 	GetBusinessFinancialPeriods(ctx context.Context, in *GetBusinessFinancialPeriodsRequest, opts ...grpc.CallOption) (*GetBusinessFinancialPeriodsResponse, error)
 }
@@ -98,6 +101,16 @@ func (c *businessServiceClient) GetBusinessByName(ctx context.Context, in *GetBu
 	return out, nil
 }
 
+func (c *businessServiceClient) GetBusinessWithUsers(ctx context.Context, in *GetBusinessWithUsersRequest, opts ...grpc.CallOption) (*GetBusinessWithUsersResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetBusinessWithUsersResponse)
+	err := c.cc.Invoke(ctx, BusinessService_GetBusinessWithUsers_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *businessServiceClient) GetBusinessWithFinancialPeriods(ctx context.Context, in *GetBusinessWithFinancialPeriodsRequest, opts ...grpc.CallOption) (*GetBusinessWithFinancialPeriodsResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(GetBusinessWithFinancialPeriodsResponse)
@@ -128,6 +141,16 @@ func (c *businessServiceClient) RemoveUserFromBusiness(ctx context.Context, in *
 	return out, nil
 }
 
+func (c *businessServiceClient) GetBusinessUsers(ctx context.Context, in *GetBusinessUsersRequest, opts ...grpc.CallOption) (*GetBusinessUsersResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetBusinessUsersResponse)
+	err := c.cc.Invoke(ctx, BusinessService_GetBusinessUsers_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *businessServiceClient) GetBusinessFinancialPeriods(ctx context.Context, in *GetBusinessFinancialPeriodsRequest, opts ...grpc.CallOption) (*GetBusinessFinancialPeriodsResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(GetBusinessFinancialPeriodsResponse)
@@ -150,11 +173,12 @@ type BusinessServiceServer interface {
 	// Business specific operations
 	GetBusinessesByOwnerID(context.Context, *GetBusinessesByOwnerIDRequest) (*GetBusinessesByOwnerIDResponse, error)
 	GetBusinessByName(context.Context, *GetBusinessByNameRequest) (*BusinessResponse, error)
-	// / rpc GetBusinessWithUsers(GetBusinessWithUsersRequest) returns (GetBusinessWithUsersResponse);
+	GetBusinessWithUsers(context.Context, *GetBusinessWithUsersRequest) (*GetBusinessWithUsersResponse, error)
 	GetBusinessWithFinancialPeriods(context.Context, *GetBusinessWithFinancialPeriodsRequest) (*GetBusinessWithFinancialPeriodsResponse, error)
 	// User management
 	AddUserToBusiness(context.Context, *AddUserToBusinessRequest) (*StatusResponse, error)
 	RemoveUserFromBusiness(context.Context, *RemoveUserFromBusinessRequest) (*StatusResponse, error)
+	GetBusinessUsers(context.Context, *GetBusinessUsersRequest) (*GetBusinessUsersResponse, error)
 	// Financial period management
 	GetBusinessFinancialPeriods(context.Context, *GetBusinessFinancialPeriodsRequest) (*GetBusinessFinancialPeriodsResponse, error)
 	mustEmbedUnimplementedBusinessServiceServer()
@@ -179,6 +203,9 @@ func (UnimplementedBusinessServiceServer) GetBusinessesByOwnerID(context.Context
 func (UnimplementedBusinessServiceServer) GetBusinessByName(context.Context, *GetBusinessByNameRequest) (*BusinessResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetBusinessByName not implemented")
 }
+func (UnimplementedBusinessServiceServer) GetBusinessWithUsers(context.Context, *GetBusinessWithUsersRequest) (*GetBusinessWithUsersResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetBusinessWithUsers not implemented")
+}
 func (UnimplementedBusinessServiceServer) GetBusinessWithFinancialPeriods(context.Context, *GetBusinessWithFinancialPeriodsRequest) (*GetBusinessWithFinancialPeriodsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetBusinessWithFinancialPeriods not implemented")
 }
@@ -187,6 +214,9 @@ func (UnimplementedBusinessServiceServer) AddUserToBusiness(context.Context, *Ad
 }
 func (UnimplementedBusinessServiceServer) RemoveUserFromBusiness(context.Context, *RemoveUserFromBusinessRequest) (*StatusResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RemoveUserFromBusiness not implemented")
+}
+func (UnimplementedBusinessServiceServer) GetBusinessUsers(context.Context, *GetBusinessUsersRequest) (*GetBusinessUsersResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetBusinessUsers not implemented")
 }
 func (UnimplementedBusinessServiceServer) GetBusinessFinancialPeriods(context.Context, *GetBusinessFinancialPeriodsRequest) (*GetBusinessFinancialPeriodsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetBusinessFinancialPeriods not implemented")
@@ -284,6 +314,24 @@ func _BusinessService_GetBusinessByName_Handler(srv interface{}, ctx context.Con
 	return interceptor(ctx, in, info, handler)
 }
 
+func _BusinessService_GetBusinessWithUsers_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetBusinessWithUsersRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BusinessServiceServer).GetBusinessWithUsers(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: BusinessService_GetBusinessWithUsers_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BusinessServiceServer).GetBusinessWithUsers(ctx, req.(*GetBusinessWithUsersRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _BusinessService_GetBusinessWithFinancialPeriods_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetBusinessWithFinancialPeriodsRequest)
 	if err := dec(in); err != nil {
@@ -338,6 +386,24 @@ func _BusinessService_RemoveUserFromBusiness_Handler(srv interface{}, ctx contex
 	return interceptor(ctx, in, info, handler)
 }
 
+func _BusinessService_GetBusinessUsers_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetBusinessUsersRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BusinessServiceServer).GetBusinessUsers(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: BusinessService_GetBusinessUsers_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BusinessServiceServer).GetBusinessUsers(ctx, req.(*GetBusinessUsersRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _BusinessService_GetBusinessFinancialPeriods_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetBusinessFinancialPeriodsRequest)
 	if err := dec(in); err != nil {
@@ -360,7 +426,7 @@ func _BusinessService_GetBusinessFinancialPeriods_Handler(srv interface{}, ctx c
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var BusinessService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "business.v1.BusinessService",
+	ServiceName: "business.BusinessService",
 	HandlerType: (*BusinessServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
@@ -380,6 +446,10 @@ var BusinessService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _BusinessService_GetBusinessByName_Handler,
 		},
 		{
+			MethodName: "GetBusinessWithUsers",
+			Handler:    _BusinessService_GetBusinessWithUsers_Handler,
+		},
+		{
 			MethodName: "GetBusinessWithFinancialPeriods",
 			Handler:    _BusinessService_GetBusinessWithFinancialPeriods_Handler,
 		},
@@ -390,6 +460,10 @@ var BusinessService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "RemoveUserFromBusiness",
 			Handler:    _BusinessService_RemoveUserFromBusiness_Handler,
+		},
+		{
+			MethodName: "GetBusinessUsers",
+			Handler:    _BusinessService_GetBusinessUsers_Handler,
 		},
 		{
 			MethodName: "GetBusinessFinancialPeriods",

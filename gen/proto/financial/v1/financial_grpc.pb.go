@@ -19,21 +19,21 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	FinancialService_CreateFinancialPeriod_FullMethodName                                   = "/financial.v1.FinancialService/CreateFinancialPeriod"
-	FinancialService_GetFinancialPeriodByID_FullMethodName                                  = "/financial.v1.FinancialService/GetFinancialPeriodByID"
-	FinancialService_GetFinancialPeriodByBusinessID_FullMethodName                          = "/financial.v1.FinancialService/GetFinancialPeriodByBusinessID"
-	FinancialService_GetFinancialPeriodByUserID_FullMethodName                              = "/financial.v1.FinancialService/GetFinancialPeriodByUserID"
-	FinancialService_GetFinancialPeriodByBusinessIDAndUserID_FullMethodName                 = "/financial.v1.FinancialService/GetFinancialPeriodByBusinessIDAndUserID"
-	FinancialService_GetFinancialPeriodByBusinessIDAndUserIDAndPeriod_FullMethodName        = "/financial.v1.FinancialService/GetFinancialPeriodByBusinessIDAndUserIDAndPeriod"
-	FinancialService_GetFinancialPeriodByBusinessIDAndUserIDAndPeriodAndYear_FullMethodName = "/financial.v1.FinancialService/GetFinancialPeriodByBusinessIDAndUserIDAndPeriodAndYear"
-	FinancialService_CloseFinancialPeriod_FullMethodName                                    = "/financial.v1.FinancialService/CloseFinancialPeriod"
-	FinancialService_ReopenFinancialPeriod_FullMethodName                                   = "/financial.v1.FinancialService/ReopenFinancialPeriod"
-	FinancialService_GetFinancialPeriodsByUserID_FullMethodName                             = "/financial.v1.FinancialService/GetFinancialPeriodsByUserID"
-	FinancialService_AddUserToFinancialPeriod_FullMethodName                                = "/financial.v1.FinancialService/AddUserToFinancialPeriod"
-	FinancialService_RemoveUserFromFinancialPeriod_FullMethodName                           = "/financial.v1.FinancialService/RemoveUserFromFinancialPeriod"
-	FinancialService_GetFinancialPeriodsByBusinessID_FullMethodName                         = "/financial.v1.FinancialService/GetFinancialPeriodsByBusinessID"
-	FinancialService_AddBusinessToFinancialPeriod_FullMethodName                            = "/financial.v1.FinancialService/AddBusinessToFinancialPeriod"
-	FinancialService_RemoveBusinessFromFinancialPeriod_FullMethodName                       = "/financial.v1.FinancialService/RemoveBusinessFromFinancialPeriod"
+	FinancialService_CreateFinancialPeriod_FullMethodName                                   = "/financial.FinancialService/CreateFinancialPeriod"
+	FinancialService_GetFinancialPeriodByID_FullMethodName                                  = "/financial.FinancialService/GetFinancialPeriodByID"
+	FinancialService_GetFinancialPeriodByBusinessID_FullMethodName                          = "/financial.FinancialService/GetFinancialPeriodByBusinessID"
+	FinancialService_GetFinancialPeriodByUserID_FullMethodName                              = "/financial.FinancialService/GetFinancialPeriodByUserID"
+	FinancialService_GetFinancialPeriodByBusinessIDAndUserID_FullMethodName                 = "/financial.FinancialService/GetFinancialPeriodByBusinessIDAndUserID"
+	FinancialService_GetFinancialPeriodByBusinessIDAndUserIDAndPeriod_FullMethodName        = "/financial.FinancialService/GetFinancialPeriodByBusinessIDAndUserIDAndPeriod"
+	FinancialService_GetFinancialPeriodByBusinessIDAndUserIDAndPeriodAndYear_FullMethodName = "/financial.FinancialService/GetFinancialPeriodByBusinessIDAndUserIDAndPeriodAndYear"
+	FinancialService_CloseFinancialPeriod_FullMethodName                                    = "/financial.FinancialService/CloseFinancialPeriod"
+	FinancialService_ReopenFinancialPeriod_FullMethodName                                   = "/financial.FinancialService/ReopenFinancialPeriod"
+	FinancialService_GetFinancialPeriodsByUserID_FullMethodName                             = "/financial.FinancialService/GetFinancialPeriodsByUserID"
+	FinancialService_AddUserToFinancialPeriod_FullMethodName                                = "/financial.FinancialService/AddUserToFinancialPeriod"
+	FinancialService_RemoveUserFromFinancialPeriod_FullMethodName                           = "/financial.FinancialService/RemoveUserFromFinancialPeriod"
+	FinancialService_GetFinancialPeriodsByBusinessID_FullMethodName                         = "/financial.FinancialService/GetFinancialPeriodsByBusinessID"
+	FinancialService_AddBusinessToFinancialPeriod_FullMethodName                            = "/financial.FinancialService/AddBusinessToFinancialPeriod"
+	FinancialService_RemoveBusinessFromFinancialPeriod_FullMethodName                       = "/financial.FinancialService/RemoveBusinessFromFinancialPeriod"
 )
 
 // FinancialServiceClient is the client API for FinancialService service.
@@ -598,7 +598,7 @@ func _FinancialService_RemoveBusinessFromFinancialPeriod_Handler(srv interface{}
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var FinancialService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "financial.v1.FinancialService",
+	ServiceName: "financial.FinancialService",
 	HandlerType: (*FinancialServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{

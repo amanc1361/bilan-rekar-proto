@@ -7,8 +7,7 @@
 package v1
 
 import (
-	_ "github.com/amanc1361/bilan-rekar-proto/gen/proto/financial/v1"
-	_ "github.com/amanc1361/bilan-rekar-proto/gen/proto/user/v1"
+	v1 "github.com/amanc1361/bilan-rekar-proto/gen/proto/user/v1"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	_ "google.golang.org/protobuf/types/known/emptypb"
@@ -26,11 +25,13 @@ const (
 
 // Business message represents a business entity
 type Business struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            uint64                 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	OwnerId       uint64                 `protobuf:"varint,2,opt,name=owner_id,json=ownerId,proto3" json:"owner_id,omitempty"`
-	Name          string                 `protobuf:"bytes,3,opt,name=name,proto3" json:"name,omitempty"`
-	Description   string                 `protobuf:"bytes,4,opt,name=description,proto3" json:"description,omitempty"`
+	state       protoimpl.MessageState `protogen:"open.v1"`
+	Id          uint64                 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	OwnerId     uint64                 `protobuf:"varint,2,opt,name=owner_id,json=ownerId,proto3" json:"owner_id,omitempty"`
+	Name        string                 `protobuf:"bytes,3,opt,name=name,proto3" json:"name,omitempty"`
+	Description string                 `protobuf:"bytes,4,opt,name=description,proto3" json:"description,omitempty"`
+	// References - typically handled differently in protobuf
+	Owner         *v1.User `protobuf:"bytes,5,opt,name=owner,proto3" json:"owner,omitempty"` // Only included when needed
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -91,6 +92,13 @@ func (x *Business) GetDescription() string {
 		return x.Description
 	}
 	return ""
+}
+
+func (x *Business) GetOwner() *v1.User {
+	if x != nil {
+		return x.Owner
+	}
+	return nil
 }
 
 type CreateBusinessRequest struct {
@@ -433,6 +441,58 @@ func (x *GetBusinessWithUsersRequest) GetId() uint64 {
 	return 0
 }
 
+type GetBusinessWithUsersResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Business      *Business              `protobuf:"bytes,1,opt,name=business,proto3" json:"business,omitempty"`
+	Users         []*v1.User             `protobuf:"bytes,2,rep,name=users,proto3" json:"users,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetBusinessWithUsersResponse) Reset() {
+	*x = GetBusinessWithUsersResponse{}
+	mi := &file_proto_business_v1_business_proto_msgTypes[8]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetBusinessWithUsersResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetBusinessWithUsersResponse) ProtoMessage() {}
+
+func (x *GetBusinessWithUsersResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_business_v1_business_proto_msgTypes[8]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetBusinessWithUsersResponse.ProtoReflect.Descriptor instead.
+func (*GetBusinessWithUsersResponse) Descriptor() ([]byte, []int) {
+	return file_proto_business_v1_business_proto_rawDescGZIP(), []int{8}
+}
+
+func (x *GetBusinessWithUsersResponse) GetBusiness() *Business {
+	if x != nil {
+		return x.Business
+	}
+	return nil
+}
+
+func (x *GetBusinessWithUsersResponse) GetUsers() []*v1.User {
+	if x != nil {
+		return x.Users
+	}
+	return nil
+}
+
 type GetBusinessWithFinancialPeriodsRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Id            uint64                 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
@@ -442,7 +502,7 @@ type GetBusinessWithFinancialPeriodsRequest struct {
 
 func (x *GetBusinessWithFinancialPeriodsRequest) Reset() {
 	*x = GetBusinessWithFinancialPeriodsRequest{}
-	mi := &file_proto_business_v1_business_proto_msgTypes[8]
+	mi := &file_proto_business_v1_business_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -454,7 +514,7 @@ func (x *GetBusinessWithFinancialPeriodsRequest) String() string {
 func (*GetBusinessWithFinancialPeriodsRequest) ProtoMessage() {}
 
 func (x *GetBusinessWithFinancialPeriodsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_business_v1_business_proto_msgTypes[8]
+	mi := &file_proto_business_v1_business_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -467,7 +527,7 @@ func (x *GetBusinessWithFinancialPeriodsRequest) ProtoReflect() protoreflect.Mes
 
 // Deprecated: Use GetBusinessWithFinancialPeriodsRequest.ProtoReflect.Descriptor instead.
 func (*GetBusinessWithFinancialPeriodsRequest) Descriptor() ([]byte, []int) {
-	return file_proto_business_v1_business_proto_rawDescGZIP(), []int{8}
+	return file_proto_business_v1_business_proto_rawDescGZIP(), []int{9}
 }
 
 func (x *GetBusinessWithFinancialPeriodsRequest) GetId() uint64 {
@@ -488,7 +548,7 @@ type FinancialPeriod struct {
 
 func (x *FinancialPeriod) Reset() {
 	*x = FinancialPeriod{}
-	mi := &file_proto_business_v1_business_proto_msgTypes[9]
+	mi := &file_proto_business_v1_business_proto_msgTypes[10]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -500,7 +560,7 @@ func (x *FinancialPeriod) String() string {
 func (*FinancialPeriod) ProtoMessage() {}
 
 func (x *FinancialPeriod) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_business_v1_business_proto_msgTypes[9]
+	mi := &file_proto_business_v1_business_proto_msgTypes[10]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -513,7 +573,7 @@ func (x *FinancialPeriod) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use FinancialPeriod.ProtoReflect.Descriptor instead.
 func (*FinancialPeriod) Descriptor() ([]byte, []int) {
-	return file_proto_business_v1_business_proto_rawDescGZIP(), []int{9}
+	return file_proto_business_v1_business_proto_rawDescGZIP(), []int{10}
 }
 
 func (x *FinancialPeriod) GetId() uint64 {
@@ -547,7 +607,7 @@ type GetBusinessWithFinancialPeriodsResponse struct {
 
 func (x *GetBusinessWithFinancialPeriodsResponse) Reset() {
 	*x = GetBusinessWithFinancialPeriodsResponse{}
-	mi := &file_proto_business_v1_business_proto_msgTypes[10]
+	mi := &file_proto_business_v1_business_proto_msgTypes[11]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -559,7 +619,7 @@ func (x *GetBusinessWithFinancialPeriodsResponse) String() string {
 func (*GetBusinessWithFinancialPeriodsResponse) ProtoMessage() {}
 
 func (x *GetBusinessWithFinancialPeriodsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_business_v1_business_proto_msgTypes[10]
+	mi := &file_proto_business_v1_business_proto_msgTypes[11]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -572,7 +632,7 @@ func (x *GetBusinessWithFinancialPeriodsResponse) ProtoReflect() protoreflect.Me
 
 // Deprecated: Use GetBusinessWithFinancialPeriodsResponse.ProtoReflect.Descriptor instead.
 func (*GetBusinessWithFinancialPeriodsResponse) Descriptor() ([]byte, []int) {
-	return file_proto_business_v1_business_proto_rawDescGZIP(), []int{10}
+	return file_proto_business_v1_business_proto_rawDescGZIP(), []int{11}
 }
 
 func (x *GetBusinessWithFinancialPeriodsResponse) GetBusiness() *Business {
@@ -599,7 +659,7 @@ type AddUserToBusinessRequest struct {
 
 func (x *AddUserToBusinessRequest) Reset() {
 	*x = AddUserToBusinessRequest{}
-	mi := &file_proto_business_v1_business_proto_msgTypes[11]
+	mi := &file_proto_business_v1_business_proto_msgTypes[12]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -611,7 +671,7 @@ func (x *AddUserToBusinessRequest) String() string {
 func (*AddUserToBusinessRequest) ProtoMessage() {}
 
 func (x *AddUserToBusinessRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_business_v1_business_proto_msgTypes[11]
+	mi := &file_proto_business_v1_business_proto_msgTypes[12]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -624,7 +684,7 @@ func (x *AddUserToBusinessRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AddUserToBusinessRequest.ProtoReflect.Descriptor instead.
 func (*AddUserToBusinessRequest) Descriptor() ([]byte, []int) {
-	return file_proto_business_v1_business_proto_rawDescGZIP(), []int{11}
+	return file_proto_business_v1_business_proto_rawDescGZIP(), []int{12}
 }
 
 func (x *AddUserToBusinessRequest) GetBusinessId() uint64 {
@@ -651,7 +711,7 @@ type RemoveUserFromBusinessRequest struct {
 
 func (x *RemoveUserFromBusinessRequest) Reset() {
 	*x = RemoveUserFromBusinessRequest{}
-	mi := &file_proto_business_v1_business_proto_msgTypes[12]
+	mi := &file_proto_business_v1_business_proto_msgTypes[13]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -663,7 +723,7 @@ func (x *RemoveUserFromBusinessRequest) String() string {
 func (*RemoveUserFromBusinessRequest) ProtoMessage() {}
 
 func (x *RemoveUserFromBusinessRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_business_v1_business_proto_msgTypes[12]
+	mi := &file_proto_business_v1_business_proto_msgTypes[13]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -676,7 +736,7 @@ func (x *RemoveUserFromBusinessRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RemoveUserFromBusinessRequest.ProtoReflect.Descriptor instead.
 func (*RemoveUserFromBusinessRequest) Descriptor() ([]byte, []int) {
-	return file_proto_business_v1_business_proto_rawDescGZIP(), []int{12}
+	return file_proto_business_v1_business_proto_rawDescGZIP(), []int{13}
 }
 
 func (x *RemoveUserFromBusinessRequest) GetBusinessId() uint64 {
@@ -702,7 +762,7 @@ type GetBusinessUsersRequest struct {
 
 func (x *GetBusinessUsersRequest) Reset() {
 	*x = GetBusinessUsersRequest{}
-	mi := &file_proto_business_v1_business_proto_msgTypes[13]
+	mi := &file_proto_business_v1_business_proto_msgTypes[14]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -714,7 +774,7 @@ func (x *GetBusinessUsersRequest) String() string {
 func (*GetBusinessUsersRequest) ProtoMessage() {}
 
 func (x *GetBusinessUsersRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_business_v1_business_proto_msgTypes[13]
+	mi := &file_proto_business_v1_business_proto_msgTypes[14]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -727,7 +787,7 @@ func (x *GetBusinessUsersRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetBusinessUsersRequest.ProtoReflect.Descriptor instead.
 func (*GetBusinessUsersRequest) Descriptor() ([]byte, []int) {
-	return file_proto_business_v1_business_proto_rawDescGZIP(), []int{13}
+	return file_proto_business_v1_business_proto_rawDescGZIP(), []int{14}
 }
 
 func (x *GetBusinessUsersRequest) GetBusinessId() uint64 {
@@ -735,6 +795,58 @@ func (x *GetBusinessUsersRequest) GetBusinessId() uint64 {
 		return x.BusinessId
 	}
 	return 0
+}
+
+type GetBusinessUsersResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	BusinessId    uint64                 `protobuf:"varint,1,opt,name=business_id,json=businessId,proto3" json:"business_id,omitempty"`
+	Users         []*v1.User             `protobuf:"bytes,2,rep,name=users,proto3" json:"users,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetBusinessUsersResponse) Reset() {
+	*x = GetBusinessUsersResponse{}
+	mi := &file_proto_business_v1_business_proto_msgTypes[15]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetBusinessUsersResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetBusinessUsersResponse) ProtoMessage() {}
+
+func (x *GetBusinessUsersResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_business_v1_business_proto_msgTypes[15]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetBusinessUsersResponse.ProtoReflect.Descriptor instead.
+func (*GetBusinessUsersResponse) Descriptor() ([]byte, []int) {
+	return file_proto_business_v1_business_proto_rawDescGZIP(), []int{15}
+}
+
+func (x *GetBusinessUsersResponse) GetBusinessId() uint64 {
+	if x != nil {
+		return x.BusinessId
+	}
+	return 0
+}
+
+func (x *GetBusinessUsersResponse) GetUsers() []*v1.User {
+	if x != nil {
+		return x.Users
+	}
+	return nil
 }
 
 type GetBusinessFinancialPeriodsRequest struct {
@@ -746,7 +858,7 @@ type GetBusinessFinancialPeriodsRequest struct {
 
 func (x *GetBusinessFinancialPeriodsRequest) Reset() {
 	*x = GetBusinessFinancialPeriodsRequest{}
-	mi := &file_proto_business_v1_business_proto_msgTypes[14]
+	mi := &file_proto_business_v1_business_proto_msgTypes[16]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -758,7 +870,7 @@ func (x *GetBusinessFinancialPeriodsRequest) String() string {
 func (*GetBusinessFinancialPeriodsRequest) ProtoMessage() {}
 
 func (x *GetBusinessFinancialPeriodsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_business_v1_business_proto_msgTypes[14]
+	mi := &file_proto_business_v1_business_proto_msgTypes[16]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -771,7 +883,7 @@ func (x *GetBusinessFinancialPeriodsRequest) ProtoReflect() protoreflect.Message
 
 // Deprecated: Use GetBusinessFinancialPeriodsRequest.ProtoReflect.Descriptor instead.
 func (*GetBusinessFinancialPeriodsRequest) Descriptor() ([]byte, []int) {
-	return file_proto_business_v1_business_proto_rawDescGZIP(), []int{14}
+	return file_proto_business_v1_business_proto_rawDescGZIP(), []int{16}
 }
 
 func (x *GetBusinessFinancialPeriodsRequest) GetBusinessId() uint64 {
@@ -791,7 +903,7 @@ type GetBusinessFinancialPeriodsResponse struct {
 
 func (x *GetBusinessFinancialPeriodsResponse) Reset() {
 	*x = GetBusinessFinancialPeriodsResponse{}
-	mi := &file_proto_business_v1_business_proto_msgTypes[15]
+	mi := &file_proto_business_v1_business_proto_msgTypes[17]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -803,7 +915,7 @@ func (x *GetBusinessFinancialPeriodsResponse) String() string {
 func (*GetBusinessFinancialPeriodsResponse) ProtoMessage() {}
 
 func (x *GetBusinessFinancialPeriodsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_business_v1_business_proto_msgTypes[15]
+	mi := &file_proto_business_v1_business_proto_msgTypes[17]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -816,7 +928,7 @@ func (x *GetBusinessFinancialPeriodsResponse) ProtoReflect() protoreflect.Messag
 
 // Deprecated: Use GetBusinessFinancialPeriodsResponse.ProtoReflect.Descriptor instead.
 func (*GetBusinessFinancialPeriodsResponse) Descriptor() ([]byte, []int) {
-	return file_proto_business_v1_business_proto_rawDescGZIP(), []int{15}
+	return file_proto_business_v1_business_proto_rawDescGZIP(), []int{17}
 }
 
 func (x *GetBusinessFinancialPeriodsResponse) GetBusinessId() uint64 {
@@ -843,7 +955,7 @@ type StatusResponse struct {
 
 func (x *StatusResponse) Reset() {
 	*x = StatusResponse{}
-	mi := &file_proto_business_v1_business_proto_msgTypes[16]
+	mi := &file_proto_business_v1_business_proto_msgTypes[18]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -855,7 +967,7 @@ func (x *StatusResponse) String() string {
 func (*StatusResponse) ProtoMessage() {}
 
 func (x *StatusResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_business_v1_business_proto_msgTypes[16]
+	mi := &file_proto_business_v1_business_proto_msgTypes[18]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -868,7 +980,7 @@ func (x *StatusResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use StatusResponse.ProtoReflect.Descriptor instead.
 func (*StatusResponse) Descriptor() ([]byte, []int) {
-	return file_proto_business_v1_business_proto_rawDescGZIP(), []int{16}
+	return file_proto_business_v1_business_proto_rawDescGZIP(), []int{18}
 }
 
 func (x *StatusResponse) GetSuccess() bool {
@@ -889,41 +1001,47 @@ var File_proto_business_v1_business_proto protoreflect.FileDescriptor
 
 const file_proto_business_v1_business_proto_rawDesc = "" +
 	"\n" +
-	" proto/business/v1/business.proto\x12\vbusiness.v1\x1a\x1bgoogle/protobuf/empty.proto\x1a\x18proto/user/v1/user.proto\x1a\"proto/financial/v1/financial.proto\"k\n" +
+	" proto/business/v1/business.proto\x12\bbusiness\x1a\x1bgoogle/protobuf/empty.proto\x1a\x18proto/user/v1/user.proto\"\x8d\x01\n" +
 	"\bBusiness\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x04R\x02id\x12\x19\n" +
 	"\bowner_id\x18\x02 \x01(\x04R\aownerId\x12\x12\n" +
 	"\x04name\x18\x03 \x01(\tR\x04name\x12 \n" +
-	"\vdescription\x18\x04 \x01(\tR\vdescription\"h\n" +
+	"\vdescription\x18\x04 \x01(\tR\vdescription\x12 \n" +
+	"\x05owner\x18\x05 \x01(\v2\n" +
+	".user.UserR\x05owner\"h\n" +
 	"\x15CreateBusinessRequest\x12\x12\n" +
 	"\x04name\x18\x01 \x01(\tR\x04name\x12\x19\n" +
 	"\bowner_id\x18\x02 \x01(\x04R\aownerId\x12 \n" +
-	"\vdescription\x18\x03 \x01(\tR\vdescription\"y\n" +
-	"\x10BusinessResponse\x121\n" +
-	"\bbusiness\x18\x01 \x01(\v2\x15.business.v1.BusinessR\bbusiness\x12\x18\n" +
+	"\vdescription\x18\x03 \x01(\tR\vdescription\"v\n" +
+	"\x10BusinessResponse\x12.\n" +
+	"\bbusiness\x18\x01 \x01(\v2\x12.business.BusinessR\bbusiness\x12\x18\n" +
 	"\asuccess\x18\x02 \x01(\bR\asuccess\x12\x18\n" +
 	"\amessage\x18\x03 \x01(\tR\amessage\"(\n" +
 	"\x16GetBusinessByIDRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x04R\x02id\":\n" +
 	"\x1dGetBusinessesByOwnerIDRequest\x12\x19\n" +
-	"\bowner_id\x18\x01 \x01(\x04R\aownerId\"W\n" +
-	"\x1eGetBusinessesByOwnerIDResponse\x125\n" +
+	"\bowner_id\x18\x01 \x01(\x04R\aownerId\"T\n" +
+	"\x1eGetBusinessesByOwnerIDResponse\x122\n" +
 	"\n" +
-	"businesses\x18\x01 \x03(\v2\x15.business.v1.BusinessR\n" +
+	"businesses\x18\x01 \x03(\v2\x12.business.BusinessR\n" +
 	"businesses\".\n" +
 	"\x18GetBusinessByNameRequest\x12\x12\n" +
 	"\x04name\x18\x01 \x01(\tR\x04name\"-\n" +
 	"\x1bGetBusinessWithUsersRequest\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x04R\x02id\"8\n" +
+	"\x02id\x18\x01 \x01(\x04R\x02id\"p\n" +
+	"\x1cGetBusinessWithUsersResponse\x12.\n" +
+	"\bbusiness\x18\x01 \x01(\v2\x12.business.BusinessR\bbusiness\x12 \n" +
+	"\x05users\x18\x02 \x03(\v2\n" +
+	".user.UserR\x05users\"8\n" +
 	"&GetBusinessWithFinancialPeriodsRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x04R\x02id\"M\n" +
 	"\x0fFinancialPeriod\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x04R\x02id\x12\x16\n" +
 	"\x06period\x18\x02 \x01(\tR\x06period\x12\x12\n" +
-	"\x04year\x18\x03 \x01(\x05R\x04year\"\xa7\x01\n" +
-	"'GetBusinessWithFinancialPeriodsResponse\x121\n" +
-	"\bbusiness\x18\x01 \x01(\v2\x15.business.v1.BusinessR\bbusiness\x12I\n" +
-	"\x11financial_periods\x18\x02 \x03(\v2\x1c.business.v1.FinancialPeriodR\x10financialPeriods\"T\n" +
+	"\x04year\x18\x03 \x01(\x05R\x04year\"\xa1\x01\n" +
+	"'GetBusinessWithFinancialPeriodsResponse\x12.\n" +
+	"\bbusiness\x18\x01 \x01(\v2\x12.business.BusinessR\bbusiness\x12F\n" +
+	"\x11financial_periods\x18\x02 \x03(\v2\x19.business.FinancialPeriodR\x10financialPeriods\"T\n" +
 	"\x18AddUserToBusinessRequest\x12\x1f\n" +
 	"\vbusiness_id\x18\x01 \x01(\x04R\n" +
 	"businessId\x12\x17\n" +
@@ -934,27 +1052,34 @@ const file_proto_business_v1_business_proto_rawDesc = "" +
 	"\auser_id\x18\x02 \x01(\x04R\x06userId\":\n" +
 	"\x17GetBusinessUsersRequest\x12\x1f\n" +
 	"\vbusiness_id\x18\x01 \x01(\x04R\n" +
-	"businessId\"E\n" +
+	"businessId\"]\n" +
+	"\x18GetBusinessUsersResponse\x12\x1f\n" +
+	"\vbusiness_id\x18\x01 \x01(\x04R\n" +
+	"businessId\x12 \n" +
+	"\x05users\x18\x02 \x03(\v2\n" +
+	".user.UserR\x05users\"E\n" +
 	"\"GetBusinessFinancialPeriodsRequest\x12\x1f\n" +
 	"\vbusiness_id\x18\x01 \x01(\x04R\n" +
-	"businessId\"\x91\x01\n" +
+	"businessId\"\x8e\x01\n" +
 	"#GetBusinessFinancialPeriodsResponse\x12\x1f\n" +
 	"\vbusiness_id\x18\x01 \x01(\x04R\n" +
-	"businessId\x12I\n" +
-	"\x11financial_periods\x18\x02 \x03(\v2\x1c.business.v1.FinancialPeriodR\x10financialPeriods\"D\n" +
+	"businessId\x12F\n" +
+	"\x11financial_periods\x18\x02 \x03(\v2\x19.business.FinancialPeriodR\x10financialPeriods\"D\n" +
 	"\x0eStatusResponse\x12\x18\n" +
 	"\asuccess\x18\x01 \x01(\bR\asuccess\x12\x18\n" +
-	"\amessage\x18\x02 \x01(\tR\amessage2\xd9\x06\n" +
-	"\x0fBusinessService\x12S\n" +
-	"\x0eCreateBusiness\x12\".business.v1.CreateBusinessRequest\x1a\x1d.business.v1.BusinessResponse\x12U\n" +
-	"\x0fGetBusinessByID\x12#.business.v1.GetBusinessByIDRequest\x1a\x1d.business.v1.BusinessResponse\x12q\n" +
-	"\x16GetBusinessesByOwnerID\x12*.business.v1.GetBusinessesByOwnerIDRequest\x1a+.business.v1.GetBusinessesByOwnerIDResponse\x12Y\n" +
-	"\x11GetBusinessByName\x12%.business.v1.GetBusinessByNameRequest\x1a\x1d.business.v1.BusinessResponse\x12\x8c\x01\n" +
-	"\x1fGetBusinessWithFinancialPeriods\x123.business.v1.GetBusinessWithFinancialPeriodsRequest\x1a4.business.v1.GetBusinessWithFinancialPeriodsResponse\x12W\n" +
-	"\x11AddUserToBusiness\x12%.business.v1.AddUserToBusinessRequest\x1a\x1b.business.v1.StatusResponse\x12a\n" +
-	"\x16RemoveUserFromBusiness\x12*.business.v1.RemoveUserFromBusinessRequest\x1a\x1b.business.v1.StatusResponse\x12\x80\x01\n" +
-	"\x1bGetBusinessFinancialPeriods\x12/.business.v1.GetBusinessFinancialPeriodsRequest\x1a0.business.v1.GetBusinessFinancialPeriodsResponseB\xab\x01\n" +
-	"\x0fcom.business.v1B\rBusinessProtoP\x01Z<github.com/amanc1361/bilan-rekar-proto/gen/proto/business/v1\xa2\x02\x03BXX\xaa\x02\vBusiness.V1\xca\x02\vBusiness\\V1\xe2\x02\x17Business\\V1\\GPBMetadata\xea\x02\fBusiness::V1b\x06proto3"
+	"\amessage\x18\x02 \x01(\tR\amessage2\xea\a\n" +
+	"\x0fBusinessService\x12M\n" +
+	"\x0eCreateBusiness\x12\x1f.business.CreateBusinessRequest\x1a\x1a.business.BusinessResponse\x12O\n" +
+	"\x0fGetBusinessByID\x12 .business.GetBusinessByIDRequest\x1a\x1a.business.BusinessResponse\x12k\n" +
+	"\x16GetBusinessesByOwnerID\x12'.business.GetBusinessesByOwnerIDRequest\x1a(.business.GetBusinessesByOwnerIDResponse\x12S\n" +
+	"\x11GetBusinessByName\x12\".business.GetBusinessByNameRequest\x1a\x1a.business.BusinessResponse\x12e\n" +
+	"\x14GetBusinessWithUsers\x12%.business.GetBusinessWithUsersRequest\x1a&.business.GetBusinessWithUsersResponse\x12\x86\x01\n" +
+	"\x1fGetBusinessWithFinancialPeriods\x120.business.GetBusinessWithFinancialPeriodsRequest\x1a1.business.GetBusinessWithFinancialPeriodsResponse\x12Q\n" +
+	"\x11AddUserToBusiness\x12\".business.AddUserToBusinessRequest\x1a\x18.business.StatusResponse\x12[\n" +
+	"\x16RemoveUserFromBusiness\x12'.business.RemoveUserFromBusinessRequest\x1a\x18.business.StatusResponse\x12Y\n" +
+	"\x10GetBusinessUsers\x12!.business.GetBusinessUsersRequest\x1a\".business.GetBusinessUsersResponse\x12z\n" +
+	"\x1bGetBusinessFinancialPeriods\x12,.business.GetBusinessFinancialPeriodsRequest\x1a-.business.GetBusinessFinancialPeriodsResponseB\x95\x01\n" +
+	"\fcom.businessB\rBusinessProtoP\x01Z6github.com/amanc1361/bilan-rekar/gen/proto/business/v1\xa2\x02\x03BXX\xaa\x02\bBusiness\xca\x02\bBusiness\xe2\x02\x14Business\\GPBMetadata\xea\x02\bBusinessb\x06proto3"
 
 var (
 	file_proto_business_v1_business_proto_rawDescOnce sync.Once
@@ -968,53 +1093,64 @@ func file_proto_business_v1_business_proto_rawDescGZIP() []byte {
 	return file_proto_business_v1_business_proto_rawDescData
 }
 
-var file_proto_business_v1_business_proto_msgTypes = make([]protoimpl.MessageInfo, 17)
+var file_proto_business_v1_business_proto_msgTypes = make([]protoimpl.MessageInfo, 19)
 var file_proto_business_v1_business_proto_goTypes = []any{
-	(*Business)(nil),                                // 0: business.v1.Business
-	(*CreateBusinessRequest)(nil),                   // 1: business.v1.CreateBusinessRequest
-	(*BusinessResponse)(nil),                        // 2: business.v1.BusinessResponse
-	(*GetBusinessByIDRequest)(nil),                  // 3: business.v1.GetBusinessByIDRequest
-	(*GetBusinessesByOwnerIDRequest)(nil),           // 4: business.v1.GetBusinessesByOwnerIDRequest
-	(*GetBusinessesByOwnerIDResponse)(nil),          // 5: business.v1.GetBusinessesByOwnerIDResponse
-	(*GetBusinessByNameRequest)(nil),                // 6: business.v1.GetBusinessByNameRequest
-	(*GetBusinessWithUsersRequest)(nil),             // 7: business.v1.GetBusinessWithUsersRequest
-	(*GetBusinessWithFinancialPeriodsRequest)(nil),  // 8: business.v1.GetBusinessWithFinancialPeriodsRequest
-	(*FinancialPeriod)(nil),                         // 9: business.v1.FinancialPeriod
-	(*GetBusinessWithFinancialPeriodsResponse)(nil), // 10: business.v1.GetBusinessWithFinancialPeriodsResponse
-	(*AddUserToBusinessRequest)(nil),                // 11: business.v1.AddUserToBusinessRequest
-	(*RemoveUserFromBusinessRequest)(nil),           // 12: business.v1.RemoveUserFromBusinessRequest
-	(*GetBusinessUsersRequest)(nil),                 // 13: business.v1.GetBusinessUsersRequest
-	(*GetBusinessFinancialPeriodsRequest)(nil),      // 14: business.v1.GetBusinessFinancialPeriodsRequest
-	(*GetBusinessFinancialPeriodsResponse)(nil),     // 15: business.v1.GetBusinessFinancialPeriodsResponse
-	(*StatusResponse)(nil),                          // 16: business.v1.StatusResponse
+	(*Business)(nil),                                // 0: business.Business
+	(*CreateBusinessRequest)(nil),                   // 1: business.CreateBusinessRequest
+	(*BusinessResponse)(nil),                        // 2: business.BusinessResponse
+	(*GetBusinessByIDRequest)(nil),                  // 3: business.GetBusinessByIDRequest
+	(*GetBusinessesByOwnerIDRequest)(nil),           // 4: business.GetBusinessesByOwnerIDRequest
+	(*GetBusinessesByOwnerIDResponse)(nil),          // 5: business.GetBusinessesByOwnerIDResponse
+	(*GetBusinessByNameRequest)(nil),                // 6: business.GetBusinessByNameRequest
+	(*GetBusinessWithUsersRequest)(nil),             // 7: business.GetBusinessWithUsersRequest
+	(*GetBusinessWithUsersResponse)(nil),            // 8: business.GetBusinessWithUsersResponse
+	(*GetBusinessWithFinancialPeriodsRequest)(nil),  // 9: business.GetBusinessWithFinancialPeriodsRequest
+	(*FinancialPeriod)(nil),                         // 10: business.FinancialPeriod
+	(*GetBusinessWithFinancialPeriodsResponse)(nil), // 11: business.GetBusinessWithFinancialPeriodsResponse
+	(*AddUserToBusinessRequest)(nil),                // 12: business.AddUserToBusinessRequest
+	(*RemoveUserFromBusinessRequest)(nil),           // 13: business.RemoveUserFromBusinessRequest
+	(*GetBusinessUsersRequest)(nil),                 // 14: business.GetBusinessUsersRequest
+	(*GetBusinessUsersResponse)(nil),                // 15: business.GetBusinessUsersResponse
+	(*GetBusinessFinancialPeriodsRequest)(nil),      // 16: business.GetBusinessFinancialPeriodsRequest
+	(*GetBusinessFinancialPeriodsResponse)(nil),     // 17: business.GetBusinessFinancialPeriodsResponse
+	(*StatusResponse)(nil),                          // 18: business.StatusResponse
+	(*v1.User)(nil),                                 // 19: user.User
 }
 var file_proto_business_v1_business_proto_depIdxs = []int32{
-	0,  // 0: business.v1.BusinessResponse.business:type_name -> business.v1.Business
-	0,  // 1: business.v1.GetBusinessesByOwnerIDResponse.businesses:type_name -> business.v1.Business
-	0,  // 2: business.v1.GetBusinessWithFinancialPeriodsResponse.business:type_name -> business.v1.Business
-	9,  // 3: business.v1.GetBusinessWithFinancialPeriodsResponse.financial_periods:type_name -> business.v1.FinancialPeriod
-	9,  // 4: business.v1.GetBusinessFinancialPeriodsResponse.financial_periods:type_name -> business.v1.FinancialPeriod
-	1,  // 5: business.v1.BusinessService.CreateBusiness:input_type -> business.v1.CreateBusinessRequest
-	3,  // 6: business.v1.BusinessService.GetBusinessByID:input_type -> business.v1.GetBusinessByIDRequest
-	4,  // 7: business.v1.BusinessService.GetBusinessesByOwnerID:input_type -> business.v1.GetBusinessesByOwnerIDRequest
-	6,  // 8: business.v1.BusinessService.GetBusinessByName:input_type -> business.v1.GetBusinessByNameRequest
-	8,  // 9: business.v1.BusinessService.GetBusinessWithFinancialPeriods:input_type -> business.v1.GetBusinessWithFinancialPeriodsRequest
-	11, // 10: business.v1.BusinessService.AddUserToBusiness:input_type -> business.v1.AddUserToBusinessRequest
-	12, // 11: business.v1.BusinessService.RemoveUserFromBusiness:input_type -> business.v1.RemoveUserFromBusinessRequest
-	14, // 12: business.v1.BusinessService.GetBusinessFinancialPeriods:input_type -> business.v1.GetBusinessFinancialPeriodsRequest
-	2,  // 13: business.v1.BusinessService.CreateBusiness:output_type -> business.v1.BusinessResponse
-	2,  // 14: business.v1.BusinessService.GetBusinessByID:output_type -> business.v1.BusinessResponse
-	5,  // 15: business.v1.BusinessService.GetBusinessesByOwnerID:output_type -> business.v1.GetBusinessesByOwnerIDResponse
-	2,  // 16: business.v1.BusinessService.GetBusinessByName:output_type -> business.v1.BusinessResponse
-	10, // 17: business.v1.BusinessService.GetBusinessWithFinancialPeriods:output_type -> business.v1.GetBusinessWithFinancialPeriodsResponse
-	16, // 18: business.v1.BusinessService.AddUserToBusiness:output_type -> business.v1.StatusResponse
-	16, // 19: business.v1.BusinessService.RemoveUserFromBusiness:output_type -> business.v1.StatusResponse
-	15, // 20: business.v1.BusinessService.GetBusinessFinancialPeriods:output_type -> business.v1.GetBusinessFinancialPeriodsResponse
-	13, // [13:21] is the sub-list for method output_type
-	5,  // [5:13] is the sub-list for method input_type
-	5,  // [5:5] is the sub-list for extension type_name
-	5,  // [5:5] is the sub-list for extension extendee
-	0,  // [0:5] is the sub-list for field type_name
+	19, // 0: business.Business.owner:type_name -> user.User
+	0,  // 1: business.BusinessResponse.business:type_name -> business.Business
+	0,  // 2: business.GetBusinessesByOwnerIDResponse.businesses:type_name -> business.Business
+	0,  // 3: business.GetBusinessWithUsersResponse.business:type_name -> business.Business
+	19, // 4: business.GetBusinessWithUsersResponse.users:type_name -> user.User
+	0,  // 5: business.GetBusinessWithFinancialPeriodsResponse.business:type_name -> business.Business
+	10, // 6: business.GetBusinessWithFinancialPeriodsResponse.financial_periods:type_name -> business.FinancialPeriod
+	19, // 7: business.GetBusinessUsersResponse.users:type_name -> user.User
+	10, // 8: business.GetBusinessFinancialPeriodsResponse.financial_periods:type_name -> business.FinancialPeriod
+	1,  // 9: business.BusinessService.CreateBusiness:input_type -> business.CreateBusinessRequest
+	3,  // 10: business.BusinessService.GetBusinessByID:input_type -> business.GetBusinessByIDRequest
+	4,  // 11: business.BusinessService.GetBusinessesByOwnerID:input_type -> business.GetBusinessesByOwnerIDRequest
+	6,  // 12: business.BusinessService.GetBusinessByName:input_type -> business.GetBusinessByNameRequest
+	7,  // 13: business.BusinessService.GetBusinessWithUsers:input_type -> business.GetBusinessWithUsersRequest
+	9,  // 14: business.BusinessService.GetBusinessWithFinancialPeriods:input_type -> business.GetBusinessWithFinancialPeriodsRequest
+	12, // 15: business.BusinessService.AddUserToBusiness:input_type -> business.AddUserToBusinessRequest
+	13, // 16: business.BusinessService.RemoveUserFromBusiness:input_type -> business.RemoveUserFromBusinessRequest
+	14, // 17: business.BusinessService.GetBusinessUsers:input_type -> business.GetBusinessUsersRequest
+	16, // 18: business.BusinessService.GetBusinessFinancialPeriods:input_type -> business.GetBusinessFinancialPeriodsRequest
+	2,  // 19: business.BusinessService.CreateBusiness:output_type -> business.BusinessResponse
+	2,  // 20: business.BusinessService.GetBusinessByID:output_type -> business.BusinessResponse
+	5,  // 21: business.BusinessService.GetBusinessesByOwnerID:output_type -> business.GetBusinessesByOwnerIDResponse
+	2,  // 22: business.BusinessService.GetBusinessByName:output_type -> business.BusinessResponse
+	8,  // 23: business.BusinessService.GetBusinessWithUsers:output_type -> business.GetBusinessWithUsersResponse
+	11, // 24: business.BusinessService.GetBusinessWithFinancialPeriods:output_type -> business.GetBusinessWithFinancialPeriodsResponse
+	18, // 25: business.BusinessService.AddUserToBusiness:output_type -> business.StatusResponse
+	18, // 26: business.BusinessService.RemoveUserFromBusiness:output_type -> business.StatusResponse
+	15, // 27: business.BusinessService.GetBusinessUsers:output_type -> business.GetBusinessUsersResponse
+	17, // 28: business.BusinessService.GetBusinessFinancialPeriods:output_type -> business.GetBusinessFinancialPeriodsResponse
+	19, // [19:29] is the sub-list for method output_type
+	9,  // [9:19] is the sub-list for method input_type
+	9,  // [9:9] is the sub-list for extension type_name
+	9,  // [9:9] is the sub-list for extension extendee
+	0,  // [0:9] is the sub-list for field type_name
 }
 
 func init() { file_proto_business_v1_business_proto_init() }
@@ -1028,7 +1164,7 @@ func file_proto_business_v1_business_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_proto_business_v1_business_proto_rawDesc), len(file_proto_business_v1_business_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   17,
+			NumMessages:   19,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

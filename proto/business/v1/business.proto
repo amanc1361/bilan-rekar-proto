@@ -1,15 +1,11 @@
 syntax = "proto3";
 
-package business.v1;
+package business;
 
+option go_package = "github.com/amanc1361/bilan-rekar/gen/proto/business/v1";
 
 import "google/protobuf/empty.proto";
 import "proto/user/v1/user.proto";
-import "proto/financial/v1/financial.proto";
-
-option go_package = "github.com/amanc1361/bilan-rekar-proto/gen/proto/business/v1";
-
-
 
 // Business message represents a business entity
 message Business {
@@ -18,7 +14,8 @@ message Business {
   string name = 3;
   string description = 4;
   
-
+  // References - typically handled differently in protobuf
+  user.User owner = 5;  // Only included when needed
 }
 
 // Request and response messages for BusinessService
@@ -55,7 +52,10 @@ message GetBusinessWithUsersRequest {
   uint64 id = 1;
 }
 
-
+message GetBusinessWithUsersResponse {
+  Business business = 1;
+  repeated user.User users = 2;
+}
 
 message GetBusinessWithFinancialPeriodsRequest {
   uint64 id = 1;
@@ -87,7 +87,10 @@ message GetBusinessUsersRequest {
   uint64 business_id = 1;
 }
 
-
+message GetBusinessUsersResponse {
+  uint64 business_id = 1;
+  repeated user.User users = 2;
+}
 
 message GetBusinessFinancialPeriodsRequest {
   uint64 business_id = 1;
@@ -112,14 +115,14 @@ service BusinessService {
   // Business specific operations
   rpc GetBusinessesByOwnerID(GetBusinessesByOwnerIDRequest) returns (GetBusinessesByOwnerIDResponse);
   rpc GetBusinessByName(GetBusinessByNameRequest) returns (BusinessResponse);
- /// rpc GetBusinessWithUsers(GetBusinessWithUsersRequest) returns (GetBusinessWithUsersResponse);
+  rpc GetBusinessWithUsers(GetBusinessWithUsersRequest) returns (GetBusinessWithUsersResponse);
   rpc GetBusinessWithFinancialPeriods(GetBusinessWithFinancialPeriodsRequest) returns (GetBusinessWithFinancialPeriodsResponse);
   
   // User management
   rpc AddUserToBusiness(AddUserToBusinessRequest) returns (StatusResponse);
   rpc RemoveUserFromBusiness(RemoveUserFromBusinessRequest) returns (StatusResponse);
-  //rpc GetBusinessUsers(GetBusinessUsersRequest) returns (GetBusinessUsersResponse);
+  rpc GetBusinessUsers(GetBusinessUsersRequest) returns (GetBusinessUsersResponse);
   
   // Financial period management
   rpc GetBusinessFinancialPeriods(GetBusinessFinancialPeriodsRequest) returns (GetBusinessFinancialPeriodsResponse);
-}
+} 

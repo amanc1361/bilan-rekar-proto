@@ -1,0 +1,115 @@
+syntax = "proto3";
+
+package auth;
+
+option go_package = "github.com/amanc1361/bilan-rekar/gen/proto/auth/v1";
+
+import "google/protobuf/timestamp.proto";
+import "proto/user/v1/user.proto";
+
+// Token message represents an authentication token
+message Token {
+  string access_token = 1;
+  string refresh_token = 2;
+  google.protobuf.Timestamp expires_at = 3;
+  string token_type = 4; // Usually "Bearer"
+}
+
+// UserClaims represents the claims embedded in a token
+message UserClaims {
+  uint64 user_id = 1;
+  string username = 2;
+  repeated string roles = 3;
+  repeated string permissions = 4;
+  google.protobuf.Timestamp issued_at = 5;
+  google.protobuf.Timestamp expires_at = 6;
+}
+
+// Login request from another microservice
+message LoginRequest {
+  string username = 1;
+  string password = 2;
+}
+
+// Token response for successful login
+message LoginResponse {
+  bool success = 1;
+  string message = 2;
+  Token token = 3;
+  user.User user = 4; // Basic user info
+}
+
+// Refresh token request
+message RefreshTokenRequest {
+  string refresh_token = 1;
+}
+
+// Validate token request
+message ValidateTokenRequest {
+  string access_token = 1;
+}
+
+// Validate token response
+message ValidateTokenResponse {
+  bool valid = 1;
+  string message = 2;
+  UserClaims claims = 3; // Only populated if valid is true
+}
+
+// Check permission request
+message CheckPermissionRequest {
+  string access_token = 1;
+  string permission = 2;
+}
+
+// Check role request
+message CheckRoleRequest {
+  string access_token = 1;
+  string role = 2;
+}
+
+// Authorization check response
+message AuthorizationResponse {
+  bool authorized = 1;
+  string message = 2;
+}
+
+// Logout request
+message LogoutRequest {
+  string access_token = 1;
+  uint64 user_id = 2;
+}
+
+// Status response
+message StatusResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+// Authentication service
+service AuthService {
+  // Login with username/password
+  rpc Login(LoginRequest) returns (LoginResponse);
+  
+  // Refresh token to get a new access token
+  rpc RefreshToken(RefreshTokenRequest) returns (LoginResponse);
+  
+  // Validate a token and get its claims
+  rpc ValidateToken(ValidateTokenRequest) returns (ValidateTokenResponse);
+  
+  // Authorization checks
+  rpc CheckPermission(CheckPermissionRequest) returns (AuthorizationResponse);
+  rpc CheckRole(CheckRoleRequest) returns (AuthorizationResponse);
+  
+  // Logout and invalidate token
+  rpc Logout(LogoutRequest) returns (StatusResponse);
+  
+  // Login with OTP (after mobile verification)
+  rpc LoginWithOTP(user.VerifyMobileOTPRequest) returns (LoginResponse);
+  
+  // Generate and send password reset token
+  rpc RequestPasswordReset(user.GetUserByEmailRequest) returns (StatusResponse);
+  
+  // Verify password reset token and set new password
+  rpc ResetPasswordWithToken(user.ResetPasswordRequest) returns (StatusResponse);
+} 

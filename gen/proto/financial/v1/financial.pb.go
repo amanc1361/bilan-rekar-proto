@@ -7,7 +7,8 @@
 package v1
 
 import (
-	_ "github.com/amanc1361/bilan-rekar-proto/gen/proto/user/v1"
+	v1 "github.com/amanc1361/bilan-rekar-proto/gen/proto/business/v1"
+	v11 "github.com/amanc1361/bilan-rekar-proto/gen/proto/user/v1"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	_ "google.golang.org/protobuf/types/known/emptypb"
@@ -26,14 +27,16 @@ const (
 
 // FinancialPeriod message represents a financial period entity
 type FinancialPeriod struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            uint64                 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	BusinessId    uint64                 `protobuf:"varint,2,opt,name=business_id,json=businessId,proto3" json:"business_id,omitempty"`
-	Name          string                 `protobuf:"bytes,3,opt,name=name,proto3" json:"name,omitempty"`
-	Start         *timestamppb.Timestamp `protobuf:"bytes,4,opt,name=start,proto3" json:"start,omitempty"`
-	End           *timestamppb.Timestamp `protobuf:"bytes,5,opt,name=end,proto3" json:"end,omitempty"`
-	Description   string                 `protobuf:"bytes,6,opt,name=description,proto3" json:"description,omitempty"`
-	IsClosed      bool                   `protobuf:"varint,7,opt,name=is_closed,json=isClosed,proto3" json:"is_closed,omitempty"`
+	state       protoimpl.MessageState `protogen:"open.v1"`
+	Id          uint64                 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	BusinessId  uint64                 `protobuf:"varint,2,opt,name=business_id,json=businessId,proto3" json:"business_id,omitempty"`
+	Name        string                 `protobuf:"bytes,3,opt,name=name,proto3" json:"name,omitempty"`
+	Start       *timestamppb.Timestamp `protobuf:"bytes,4,opt,name=start,proto3" json:"start,omitempty"`
+	End         *timestamppb.Timestamp `protobuf:"bytes,5,opt,name=end,proto3" json:"end,omitempty"`
+	Description string                 `protobuf:"bytes,6,opt,name=description,proto3" json:"description,omitempty"`
+	IsClosed    bool                   `protobuf:"varint,7,opt,name=is_closed,json=isClosed,proto3" json:"is_closed,omitempty"`
+	// References - typically handled differently in protobuf
+	Business      *v1.Business `protobuf:"bytes,8,opt,name=business,proto3" json:"business,omitempty"` // Only included when needed
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -115,6 +118,13 @@ func (x *FinancialPeriod) GetIsClosed() bool {
 		return x.IsClosed
 	}
 	return false
+}
+
+func (x *FinancialPeriod) GetBusiness() *v1.Business {
+	if x != nil {
+		return x.Business
+	}
+	return nil
 }
 
 type CreateFinancialPeriodRequest struct {
@@ -993,6 +1003,110 @@ func (x *RemoveBusinessFromFinancialPeriodRequest) GetBusinessId() uint64 {
 	return 0
 }
 
+type FinancialPeriodWithUsersResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Period        *FinancialPeriod       `protobuf:"bytes,1,opt,name=period,proto3" json:"period,omitempty"`
+	Users         []*v11.User            `protobuf:"bytes,2,rep,name=users,proto3" json:"users,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *FinancialPeriodWithUsersResponse) Reset() {
+	*x = FinancialPeriodWithUsersResponse{}
+	mi := &file_proto_financial_v1_financial_proto_msgTypes[18]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *FinancialPeriodWithUsersResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*FinancialPeriodWithUsersResponse) ProtoMessage() {}
+
+func (x *FinancialPeriodWithUsersResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_financial_v1_financial_proto_msgTypes[18]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use FinancialPeriodWithUsersResponse.ProtoReflect.Descriptor instead.
+func (*FinancialPeriodWithUsersResponse) Descriptor() ([]byte, []int) {
+	return file_proto_financial_v1_financial_proto_rawDescGZIP(), []int{18}
+}
+
+func (x *FinancialPeriodWithUsersResponse) GetPeriod() *FinancialPeriod {
+	if x != nil {
+		return x.Period
+	}
+	return nil
+}
+
+func (x *FinancialPeriodWithUsersResponse) GetUsers() []*v11.User {
+	if x != nil {
+		return x.Users
+	}
+	return nil
+}
+
+type FinancialPeriodWithBusinessesResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Period        *FinancialPeriod       `protobuf:"bytes,1,opt,name=period,proto3" json:"period,omitempty"`
+	Businesses    []*v1.Business         `protobuf:"bytes,2,rep,name=businesses,proto3" json:"businesses,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *FinancialPeriodWithBusinessesResponse) Reset() {
+	*x = FinancialPeriodWithBusinessesResponse{}
+	mi := &file_proto_financial_v1_financial_proto_msgTypes[19]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *FinancialPeriodWithBusinessesResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*FinancialPeriodWithBusinessesResponse) ProtoMessage() {}
+
+func (x *FinancialPeriodWithBusinessesResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_financial_v1_financial_proto_msgTypes[19]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use FinancialPeriodWithBusinessesResponse.ProtoReflect.Descriptor instead.
+func (*FinancialPeriodWithBusinessesResponse) Descriptor() ([]byte, []int) {
+	return file_proto_financial_v1_financial_proto_rawDescGZIP(), []int{19}
+}
+
+func (x *FinancialPeriodWithBusinessesResponse) GetPeriod() *FinancialPeriod {
+	if x != nil {
+		return x.Period
+	}
+	return nil
+}
+
+func (x *FinancialPeriodWithBusinessesResponse) GetBusinesses() []*v1.Business {
+	if x != nil {
+		return x.Businesses
+	}
+	return nil
+}
+
 type StatusResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Success       bool                   `protobuf:"varint,1,opt,name=success,proto3" json:"success,omitempty"`
@@ -1003,7 +1117,7 @@ type StatusResponse struct {
 
 func (x *StatusResponse) Reset() {
 	*x = StatusResponse{}
-	mi := &file_proto_financial_v1_financial_proto_msgTypes[18]
+	mi := &file_proto_financial_v1_financial_proto_msgTypes[20]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1015,7 +1129,7 @@ func (x *StatusResponse) String() string {
 func (*StatusResponse) ProtoMessage() {}
 
 func (x *StatusResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_financial_v1_financial_proto_msgTypes[18]
+	mi := &file_proto_financial_v1_financial_proto_msgTypes[20]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1028,7 +1142,7 @@ func (x *StatusResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use StatusResponse.ProtoReflect.Descriptor instead.
 func (*StatusResponse) Descriptor() ([]byte, []int) {
-	return file_proto_financial_v1_financial_proto_rawDescGZIP(), []int{18}
+	return file_proto_financial_v1_financial_proto_rawDescGZIP(), []int{20}
 }
 
 func (x *StatusResponse) GetSuccess() bool {
@@ -1049,7 +1163,7 @@ var File_proto_financial_v1_financial_proto protoreflect.FileDescriptor
 
 const file_proto_financial_v1_financial_proto_rawDesc = "" +
 	"\n" +
-	"\"proto/financial/v1/financial.proto\x12\ffinancial.v1\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x18proto/user/v1/user.proto\"\xf5\x01\n" +
+	"\"proto/financial/v1/financial.proto\x12\tfinancial\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x18proto/user/v1/user.proto\x1a proto/business/v1/business.proto\"\xa5\x02\n" +
 	"\x0fFinancialPeriod\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x04R\x02id\x12\x1f\n" +
 	"\vbusiness_id\x18\x02 \x01(\x04R\n" +
@@ -1058,16 +1172,17 @@ const file_proto_financial_v1_financial_proto_rawDesc = "" +
 	"\x05start\x18\x04 \x01(\v2\x1a.google.protobuf.TimestampR\x05start\x12,\n" +
 	"\x03end\x18\x05 \x01(\v2\x1a.google.protobuf.TimestampR\x03end\x12 \n" +
 	"\vdescription\x18\x06 \x01(\tR\vdescription\x12\x1b\n" +
-	"\tis_closed\x18\a \x01(\bR\bisClosed\"\xd5\x01\n" +
+	"\tis_closed\x18\a \x01(\bR\bisClosed\x12.\n" +
+	"\bbusiness\x18\b \x01(\v2\x12.business.BusinessR\bbusiness\"\xd5\x01\n" +
 	"\x1cCreateFinancialPeriodRequest\x12\x1f\n" +
 	"\vbusiness_id\x18\x01 \x01(\x04R\n" +
 	"businessId\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x120\n" +
 	"\x05start\x18\x03 \x01(\v2\x1a.google.protobuf.TimestampR\x05start\x12,\n" +
 	"\x03end\x18\x04 \x01(\v2\x1a.google.protobuf.TimestampR\x03end\x12 \n" +
-	"\vdescription\x18\x05 \x01(\tR\vdescription\"\x84\x01\n" +
-	"\x17FinancialPeriodResponse\x125\n" +
-	"\x06period\x18\x01 \x01(\v2\x1d.financial.v1.FinancialPeriodR\x06period\x12\x18\n" +
+	"\vdescription\x18\x05 \x01(\tR\vdescription\"\x81\x01\n" +
+	"\x17FinancialPeriodResponse\x122\n" +
+	"\x06period\x18\x01 \x01(\v2\x1a.financial.FinancialPeriodR\x06period\x12\x18\n" +
 	"\asuccess\x18\x02 \x01(\bR\asuccess\x12\x18\n" +
 	"\amessage\x18\x03 \x01(\tR\amessage\"/\n" +
 	"\x1dGetFinancialPeriodByIDRequest\x12\x0e\n" +
@@ -1097,9 +1212,9 @@ const file_proto_financial_v1_financial_proto_rawDesc = "" +
 	"\x1cReopenFinancialPeriodRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x04R\x02id\"=\n" +
 	"\"GetFinancialPeriodsByUserIDRequest\x12\x17\n" +
-	"\auser_id\x18\x01 \x01(\x04R\x06userId\"V\n" +
-	"\x1bGetFinancialPeriodsResponse\x127\n" +
-	"\aperiods\x18\x01 \x03(\v2\x1d.financial.v1.FinancialPeriodR\aperiods\"W\n" +
+	"\auser_id\x18\x01 \x01(\x04R\x06userId\"S\n" +
+	"\x1bGetFinancialPeriodsResponse\x124\n" +
+	"\aperiods\x18\x01 \x03(\v2\x1a.financial.FinancialPeriodR\aperiods\"W\n" +
 	"\x1fAddUserToFinancialPeriodRequest\x12\x1b\n" +
 	"\tperiod_id\x18\x01 \x01(\x04R\bperiodId\x12\x17\n" +
 	"\auser_id\x18\x02 \x01(\x04R\x06userId\"\\\n" +
@@ -1116,27 +1231,36 @@ const file_proto_financial_v1_financial_proto_rawDesc = "" +
 	"(RemoveBusinessFromFinancialPeriodRequest\x12\x1b\n" +
 	"\tperiod_id\x18\x01 \x01(\x04R\bperiodId\x12\x1f\n" +
 	"\vbusiness_id\x18\x02 \x01(\x04R\n" +
-	"businessId\"D\n" +
+	"businessId\"x\n" +
+	" FinancialPeriodWithUsersResponse\x122\n" +
+	"\x06period\x18\x01 \x01(\v2\x1a.financial.FinancialPeriodR\x06period\x12 \n" +
+	"\x05users\x18\x02 \x03(\v2\n" +
+	".user.UserR\x05users\"\x8f\x01\n" +
+	"%FinancialPeriodWithBusinessesResponse\x122\n" +
+	"\x06period\x18\x01 \x01(\v2\x1a.financial.FinancialPeriodR\x06period\x122\n" +
+	"\n" +
+	"businesses\x18\x02 \x03(\v2\x12.business.BusinessR\n" +
+	"businesses\"D\n" +
 	"\x0eStatusResponse\x12\x18\n" +
 	"\asuccess\x18\x01 \x01(\bR\asuccess\x12\x18\n" +
-	"\amessage\x18\x02 \x01(\tR\amessage2\xd2\x0e\n" +
-	"\x10FinancialService\x12j\n" +
-	"\x15CreateFinancialPeriod\x12*.financial.v1.CreateFinancialPeriodRequest\x1a%.financial.v1.FinancialPeriodResponse\x12l\n" +
-	"\x16GetFinancialPeriodByID\x12+.financial.v1.GetFinancialPeriodByIDRequest\x1a%.financial.v1.FinancialPeriodResponse\x12|\n" +
-	"\x1eGetFinancialPeriodByBusinessID\x123.financial.v1.GetFinancialPeriodByBusinessIDRequest\x1a%.financial.v1.FinancialPeriodResponse\x12t\n" +
-	"\x1aGetFinancialPeriodByUserID\x12/.financial.v1.GetFinancialPeriodByUserIDRequest\x1a%.financial.v1.FinancialPeriodResponse\x12\x8e\x01\n" +
-	"'GetFinancialPeriodByBusinessIDAndUserID\x12<.financial.v1.GetFinancialPeriodByBusinessIDAndUserIDRequest\x1a%.financial.v1.FinancialPeriodResponse\x12\xa0\x01\n" +
-	"0GetFinancialPeriodByBusinessIDAndUserIDAndPeriod\x12E.financial.v1.GetFinancialPeriodByBusinessIDAndUserIDAndPeriodRequest\x1a%.financial.v1.FinancialPeriodResponse\x12\xae\x01\n" +
-	"7GetFinancialPeriodByBusinessIDAndUserIDAndPeriodAndYear\x12L.financial.v1.GetFinancialPeriodByBusinessIDAndUserIDAndPeriodAndYearRequest\x1a%.financial.v1.FinancialPeriodResponse\x12_\n" +
-	"\x14CloseFinancialPeriod\x12).financial.v1.CloseFinancialPeriodRequest\x1a\x1c.financial.v1.StatusResponse\x12a\n" +
-	"\x15ReopenFinancialPeriod\x12*.financial.v1.ReopenFinancialPeriodRequest\x1a\x1c.financial.v1.StatusResponse\x12z\n" +
-	"\x1bGetFinancialPeriodsByUserID\x120.financial.v1.GetFinancialPeriodsByUserIDRequest\x1a).financial.v1.GetFinancialPeriodsResponse\x12g\n" +
-	"\x18AddUserToFinancialPeriod\x12-.financial.v1.AddUserToFinancialPeriodRequest\x1a\x1c.financial.v1.StatusResponse\x12q\n" +
-	"\x1dRemoveUserFromFinancialPeriod\x122.financial.v1.RemoveUserFromFinancialPeriodRequest\x1a\x1c.financial.v1.StatusResponse\x12\x82\x01\n" +
-	"\x1fGetFinancialPeriodsByBusinessID\x124.financial.v1.GetFinancialPeriodsByBusinessIDRequest\x1a).financial.v1.GetFinancialPeriodsResponse\x12o\n" +
-	"\x1cAddBusinessToFinancialPeriod\x121.financial.v1.AddBusinessToFinancialPeriodRequest\x1a\x1c.financial.v1.StatusResponse\x12y\n" +
-	"!RemoveBusinessFromFinancialPeriod\x126.financial.v1.RemoveBusinessFromFinancialPeriodRequest\x1a\x1c.financial.v1.StatusResponseB\xb2\x01\n" +
-	"\x10com.financial.v1B\x0eFinancialProtoP\x01Z=github.com/amanc1361/bilan-rekar-proto/gen/proto/financial/v1\xa2\x02\x03FXX\xaa\x02\fFinancial.V1\xca\x02\fFinancial\\V1\xe2\x02\x18Financial\\V1\\GPBMetadata\xea\x02\rFinancial::V1b\x06proto3"
+	"\amessage\x18\x02 \x01(\tR\amessage2\xf7\r\n" +
+	"\x10FinancialService\x12d\n" +
+	"\x15CreateFinancialPeriod\x12'.financial.CreateFinancialPeriodRequest\x1a\".financial.FinancialPeriodResponse\x12f\n" +
+	"\x16GetFinancialPeriodByID\x12(.financial.GetFinancialPeriodByIDRequest\x1a\".financial.FinancialPeriodResponse\x12v\n" +
+	"\x1eGetFinancialPeriodByBusinessID\x120.financial.GetFinancialPeriodByBusinessIDRequest\x1a\".financial.FinancialPeriodResponse\x12n\n" +
+	"\x1aGetFinancialPeriodByUserID\x12,.financial.GetFinancialPeriodByUserIDRequest\x1a\".financial.FinancialPeriodResponse\x12\x88\x01\n" +
+	"'GetFinancialPeriodByBusinessIDAndUserID\x129.financial.GetFinancialPeriodByBusinessIDAndUserIDRequest\x1a\".financial.FinancialPeriodResponse\x12\x9a\x01\n" +
+	"0GetFinancialPeriodByBusinessIDAndUserIDAndPeriod\x12B.financial.GetFinancialPeriodByBusinessIDAndUserIDAndPeriodRequest\x1a\".financial.FinancialPeriodResponse\x12\xa8\x01\n" +
+	"7GetFinancialPeriodByBusinessIDAndUserIDAndPeriodAndYear\x12I.financial.GetFinancialPeriodByBusinessIDAndUserIDAndPeriodAndYearRequest\x1a\".financial.FinancialPeriodResponse\x12Y\n" +
+	"\x14CloseFinancialPeriod\x12&.financial.CloseFinancialPeriodRequest\x1a\x19.financial.StatusResponse\x12[\n" +
+	"\x15ReopenFinancialPeriod\x12'.financial.ReopenFinancialPeriodRequest\x1a\x19.financial.StatusResponse\x12t\n" +
+	"\x1bGetFinancialPeriodsByUserID\x12-.financial.GetFinancialPeriodsByUserIDRequest\x1a&.financial.GetFinancialPeriodsResponse\x12a\n" +
+	"\x18AddUserToFinancialPeriod\x12*.financial.AddUserToFinancialPeriodRequest\x1a\x19.financial.StatusResponse\x12k\n" +
+	"\x1dRemoveUserFromFinancialPeriod\x12/.financial.RemoveUserFromFinancialPeriodRequest\x1a\x19.financial.StatusResponse\x12|\n" +
+	"\x1fGetFinancialPeriodsByBusinessID\x121.financial.GetFinancialPeriodsByBusinessIDRequest\x1a&.financial.GetFinancialPeriodsResponse\x12i\n" +
+	"\x1cAddBusinessToFinancialPeriod\x12..financial.AddBusinessToFinancialPeriodRequest\x1a\x19.financial.StatusResponse\x12s\n" +
+	"!RemoveBusinessFromFinancialPeriod\x123.financial.RemoveBusinessFromFinancialPeriodRequest\x1a\x19.financial.StatusResponseB\x9c\x01\n" +
+	"\rcom.financialB\x0eFinancialProtoP\x01Z7github.com/amanc1361/bilan-rekar/gen/proto/financial/v1\xa2\x02\x03FXX\xaa\x02\tFinancial\xca\x02\tFinancial\xe2\x02\x15Financial\\GPBMetadata\xea\x02\tFinancialb\x06proto3"
 
 var (
 	file_proto_financial_v1_financial_proto_rawDescOnce sync.Once
@@ -1150,71 +1274,80 @@ func file_proto_financial_v1_financial_proto_rawDescGZIP() []byte {
 	return file_proto_financial_v1_financial_proto_rawDescData
 }
 
-var file_proto_financial_v1_financial_proto_msgTypes = make([]protoimpl.MessageInfo, 19)
+var file_proto_financial_v1_financial_proto_msgTypes = make([]protoimpl.MessageInfo, 21)
 var file_proto_financial_v1_financial_proto_goTypes = []any{
-	(*FinancialPeriod)(nil),                                                // 0: financial.v1.FinancialPeriod
-	(*CreateFinancialPeriodRequest)(nil),                                   // 1: financial.v1.CreateFinancialPeriodRequest
-	(*FinancialPeriodResponse)(nil),                                        // 2: financial.v1.FinancialPeriodResponse
-	(*GetFinancialPeriodByIDRequest)(nil),                                  // 3: financial.v1.GetFinancialPeriodByIDRequest
-	(*GetFinancialPeriodByBusinessIDRequest)(nil),                          // 4: financial.v1.GetFinancialPeriodByBusinessIDRequest
-	(*GetFinancialPeriodByUserIDRequest)(nil),                              // 5: financial.v1.GetFinancialPeriodByUserIDRequest
-	(*GetFinancialPeriodByBusinessIDAndUserIDRequest)(nil),                 // 6: financial.v1.GetFinancialPeriodByBusinessIDAndUserIDRequest
-	(*GetFinancialPeriodByBusinessIDAndUserIDAndPeriodRequest)(nil),        // 7: financial.v1.GetFinancialPeriodByBusinessIDAndUserIDAndPeriodRequest
-	(*GetFinancialPeriodByBusinessIDAndUserIDAndPeriodAndYearRequest)(nil), // 8: financial.v1.GetFinancialPeriodByBusinessIDAndUserIDAndPeriodAndYearRequest
-	(*CloseFinancialPeriodRequest)(nil),                                    // 9: financial.v1.CloseFinancialPeriodRequest
-	(*ReopenFinancialPeriodRequest)(nil),                                   // 10: financial.v1.ReopenFinancialPeriodRequest
-	(*GetFinancialPeriodsByUserIDRequest)(nil),                             // 11: financial.v1.GetFinancialPeriodsByUserIDRequest
-	(*GetFinancialPeriodsResponse)(nil),                                    // 12: financial.v1.GetFinancialPeriodsResponse
-	(*AddUserToFinancialPeriodRequest)(nil),                                // 13: financial.v1.AddUserToFinancialPeriodRequest
-	(*RemoveUserFromFinancialPeriodRequest)(nil),                           // 14: financial.v1.RemoveUserFromFinancialPeriodRequest
-	(*GetFinancialPeriodsByBusinessIDRequest)(nil),                         // 15: financial.v1.GetFinancialPeriodsByBusinessIDRequest
-	(*AddBusinessToFinancialPeriodRequest)(nil),                            // 16: financial.v1.AddBusinessToFinancialPeriodRequest
-	(*RemoveBusinessFromFinancialPeriodRequest)(nil),                       // 17: financial.v1.RemoveBusinessFromFinancialPeriodRequest
-	(*StatusResponse)(nil),                                                 // 18: financial.v1.StatusResponse
-	(*timestamppb.Timestamp)(nil),                                          // 19: google.protobuf.Timestamp
+	(*FinancialPeriod)(nil),                                                // 0: financial.FinancialPeriod
+	(*CreateFinancialPeriodRequest)(nil),                                   // 1: financial.CreateFinancialPeriodRequest
+	(*FinancialPeriodResponse)(nil),                                        // 2: financial.FinancialPeriodResponse
+	(*GetFinancialPeriodByIDRequest)(nil),                                  // 3: financial.GetFinancialPeriodByIDRequest
+	(*GetFinancialPeriodByBusinessIDRequest)(nil),                          // 4: financial.GetFinancialPeriodByBusinessIDRequest
+	(*GetFinancialPeriodByUserIDRequest)(nil),                              // 5: financial.GetFinancialPeriodByUserIDRequest
+	(*GetFinancialPeriodByBusinessIDAndUserIDRequest)(nil),                 // 6: financial.GetFinancialPeriodByBusinessIDAndUserIDRequest
+	(*GetFinancialPeriodByBusinessIDAndUserIDAndPeriodRequest)(nil),        // 7: financial.GetFinancialPeriodByBusinessIDAndUserIDAndPeriodRequest
+	(*GetFinancialPeriodByBusinessIDAndUserIDAndPeriodAndYearRequest)(nil), // 8: financial.GetFinancialPeriodByBusinessIDAndUserIDAndPeriodAndYearRequest
+	(*CloseFinancialPeriodRequest)(nil),                                    // 9: financial.CloseFinancialPeriodRequest
+	(*ReopenFinancialPeriodRequest)(nil),                                   // 10: financial.ReopenFinancialPeriodRequest
+	(*GetFinancialPeriodsByUserIDRequest)(nil),                             // 11: financial.GetFinancialPeriodsByUserIDRequest
+	(*GetFinancialPeriodsResponse)(nil),                                    // 12: financial.GetFinancialPeriodsResponse
+	(*AddUserToFinancialPeriodRequest)(nil),                                // 13: financial.AddUserToFinancialPeriodRequest
+	(*RemoveUserFromFinancialPeriodRequest)(nil),                           // 14: financial.RemoveUserFromFinancialPeriodRequest
+	(*GetFinancialPeriodsByBusinessIDRequest)(nil),                         // 15: financial.GetFinancialPeriodsByBusinessIDRequest
+	(*AddBusinessToFinancialPeriodRequest)(nil),                            // 16: financial.AddBusinessToFinancialPeriodRequest
+	(*RemoveBusinessFromFinancialPeriodRequest)(nil),                       // 17: financial.RemoveBusinessFromFinancialPeriodRequest
+	(*FinancialPeriodWithUsersResponse)(nil),                               // 18: financial.FinancialPeriodWithUsersResponse
+	(*FinancialPeriodWithBusinessesResponse)(nil),                          // 19: financial.FinancialPeriodWithBusinessesResponse
+	(*StatusResponse)(nil),                                                 // 20: financial.StatusResponse
+	(*timestamppb.Timestamp)(nil),                                          // 21: google.protobuf.Timestamp
+	(*v1.Business)(nil),                                                    // 22: business.Business
+	(*v11.User)(nil),                                                       // 23: user.User
 }
 var file_proto_financial_v1_financial_proto_depIdxs = []int32{
-	19, // 0: financial.v1.FinancialPeriod.start:type_name -> google.protobuf.Timestamp
-	19, // 1: financial.v1.FinancialPeriod.end:type_name -> google.protobuf.Timestamp
-	19, // 2: financial.v1.CreateFinancialPeriodRequest.start:type_name -> google.protobuf.Timestamp
-	19, // 3: financial.v1.CreateFinancialPeriodRequest.end:type_name -> google.protobuf.Timestamp
-	0,  // 4: financial.v1.FinancialPeriodResponse.period:type_name -> financial.v1.FinancialPeriod
-	0,  // 5: financial.v1.GetFinancialPeriodsResponse.periods:type_name -> financial.v1.FinancialPeriod
-	1,  // 6: financial.v1.FinancialService.CreateFinancialPeriod:input_type -> financial.v1.CreateFinancialPeriodRequest
-	3,  // 7: financial.v1.FinancialService.GetFinancialPeriodByID:input_type -> financial.v1.GetFinancialPeriodByIDRequest
-	4,  // 8: financial.v1.FinancialService.GetFinancialPeriodByBusinessID:input_type -> financial.v1.GetFinancialPeriodByBusinessIDRequest
-	5,  // 9: financial.v1.FinancialService.GetFinancialPeriodByUserID:input_type -> financial.v1.GetFinancialPeriodByUserIDRequest
-	6,  // 10: financial.v1.FinancialService.GetFinancialPeriodByBusinessIDAndUserID:input_type -> financial.v1.GetFinancialPeriodByBusinessIDAndUserIDRequest
-	7,  // 11: financial.v1.FinancialService.GetFinancialPeriodByBusinessIDAndUserIDAndPeriod:input_type -> financial.v1.GetFinancialPeriodByBusinessIDAndUserIDAndPeriodRequest
-	8,  // 12: financial.v1.FinancialService.GetFinancialPeriodByBusinessIDAndUserIDAndPeriodAndYear:input_type -> financial.v1.GetFinancialPeriodByBusinessIDAndUserIDAndPeriodAndYearRequest
-	9,  // 13: financial.v1.FinancialService.CloseFinancialPeriod:input_type -> financial.v1.CloseFinancialPeriodRequest
-	10, // 14: financial.v1.FinancialService.ReopenFinancialPeriod:input_type -> financial.v1.ReopenFinancialPeriodRequest
-	11, // 15: financial.v1.FinancialService.GetFinancialPeriodsByUserID:input_type -> financial.v1.GetFinancialPeriodsByUserIDRequest
-	13, // 16: financial.v1.FinancialService.AddUserToFinancialPeriod:input_type -> financial.v1.AddUserToFinancialPeriodRequest
-	14, // 17: financial.v1.FinancialService.RemoveUserFromFinancialPeriod:input_type -> financial.v1.RemoveUserFromFinancialPeriodRequest
-	15, // 18: financial.v1.FinancialService.GetFinancialPeriodsByBusinessID:input_type -> financial.v1.GetFinancialPeriodsByBusinessIDRequest
-	16, // 19: financial.v1.FinancialService.AddBusinessToFinancialPeriod:input_type -> financial.v1.AddBusinessToFinancialPeriodRequest
-	17, // 20: financial.v1.FinancialService.RemoveBusinessFromFinancialPeriod:input_type -> financial.v1.RemoveBusinessFromFinancialPeriodRequest
-	2,  // 21: financial.v1.FinancialService.CreateFinancialPeriod:output_type -> financial.v1.FinancialPeriodResponse
-	2,  // 22: financial.v1.FinancialService.GetFinancialPeriodByID:output_type -> financial.v1.FinancialPeriodResponse
-	2,  // 23: financial.v1.FinancialService.GetFinancialPeriodByBusinessID:output_type -> financial.v1.FinancialPeriodResponse
-	2,  // 24: financial.v1.FinancialService.GetFinancialPeriodByUserID:output_type -> financial.v1.FinancialPeriodResponse
-	2,  // 25: financial.v1.FinancialService.GetFinancialPeriodByBusinessIDAndUserID:output_type -> financial.v1.FinancialPeriodResponse
-	2,  // 26: financial.v1.FinancialService.GetFinancialPeriodByBusinessIDAndUserIDAndPeriod:output_type -> financial.v1.FinancialPeriodResponse
-	2,  // 27: financial.v1.FinancialService.GetFinancialPeriodByBusinessIDAndUserIDAndPeriodAndYear:output_type -> financial.v1.FinancialPeriodResponse
-	18, // 28: financial.v1.FinancialService.CloseFinancialPeriod:output_type -> financial.v1.StatusResponse
-	18, // 29: financial.v1.FinancialService.ReopenFinancialPeriod:output_type -> financial.v1.StatusResponse
-	12, // 30: financial.v1.FinancialService.GetFinancialPeriodsByUserID:output_type -> financial.v1.GetFinancialPeriodsResponse
-	18, // 31: financial.v1.FinancialService.AddUserToFinancialPeriod:output_type -> financial.v1.StatusResponse
-	18, // 32: financial.v1.FinancialService.RemoveUserFromFinancialPeriod:output_type -> financial.v1.StatusResponse
-	12, // 33: financial.v1.FinancialService.GetFinancialPeriodsByBusinessID:output_type -> financial.v1.GetFinancialPeriodsResponse
-	18, // 34: financial.v1.FinancialService.AddBusinessToFinancialPeriod:output_type -> financial.v1.StatusResponse
-	18, // 35: financial.v1.FinancialService.RemoveBusinessFromFinancialPeriod:output_type -> financial.v1.StatusResponse
-	21, // [21:36] is the sub-list for method output_type
-	6,  // [6:21] is the sub-list for method input_type
-	6,  // [6:6] is the sub-list for extension type_name
-	6,  // [6:6] is the sub-list for extension extendee
-	0,  // [0:6] is the sub-list for field type_name
+	21, // 0: financial.FinancialPeriod.start:type_name -> google.protobuf.Timestamp
+	21, // 1: financial.FinancialPeriod.end:type_name -> google.protobuf.Timestamp
+	22, // 2: financial.FinancialPeriod.business:type_name -> business.Business
+	21, // 3: financial.CreateFinancialPeriodRequest.start:type_name -> google.protobuf.Timestamp
+	21, // 4: financial.CreateFinancialPeriodRequest.end:type_name -> google.protobuf.Timestamp
+	0,  // 5: financial.FinancialPeriodResponse.period:type_name -> financial.FinancialPeriod
+	0,  // 6: financial.GetFinancialPeriodsResponse.periods:type_name -> financial.FinancialPeriod
+	0,  // 7: financial.FinancialPeriodWithUsersResponse.period:type_name -> financial.FinancialPeriod
+	23, // 8: financial.FinancialPeriodWithUsersResponse.users:type_name -> user.User
+	0,  // 9: financial.FinancialPeriodWithBusinessesResponse.period:type_name -> financial.FinancialPeriod
+	22, // 10: financial.FinancialPeriodWithBusinessesResponse.businesses:type_name -> business.Business
+	1,  // 11: financial.FinancialService.CreateFinancialPeriod:input_type -> financial.CreateFinancialPeriodRequest
+	3,  // 12: financial.FinancialService.GetFinancialPeriodByID:input_type -> financial.GetFinancialPeriodByIDRequest
+	4,  // 13: financial.FinancialService.GetFinancialPeriodByBusinessID:input_type -> financial.GetFinancialPeriodByBusinessIDRequest
+	5,  // 14: financial.FinancialService.GetFinancialPeriodByUserID:input_type -> financial.GetFinancialPeriodByUserIDRequest
+	6,  // 15: financial.FinancialService.GetFinancialPeriodByBusinessIDAndUserID:input_type -> financial.GetFinancialPeriodByBusinessIDAndUserIDRequest
+	7,  // 16: financial.FinancialService.GetFinancialPeriodByBusinessIDAndUserIDAndPeriod:input_type -> financial.GetFinancialPeriodByBusinessIDAndUserIDAndPeriodRequest
+	8,  // 17: financial.FinancialService.GetFinancialPeriodByBusinessIDAndUserIDAndPeriodAndYear:input_type -> financial.GetFinancialPeriodByBusinessIDAndUserIDAndPeriodAndYearRequest
+	9,  // 18: financial.FinancialService.CloseFinancialPeriod:input_type -> financial.CloseFinancialPeriodRequest
+	10, // 19: financial.FinancialService.ReopenFinancialPeriod:input_type -> financial.ReopenFinancialPeriodRequest
+	11, // 20: financial.FinancialService.GetFinancialPeriodsByUserID:input_type -> financial.GetFinancialPeriodsByUserIDRequest
+	13, // 21: financial.FinancialService.AddUserToFinancialPeriod:input_type -> financial.AddUserToFinancialPeriodRequest
+	14, // 22: financial.FinancialService.RemoveUserFromFinancialPeriod:input_type -> financial.RemoveUserFromFinancialPeriodRequest
+	15, // 23: financial.FinancialService.GetFinancialPeriodsByBusinessID:input_type -> financial.GetFinancialPeriodsByBusinessIDRequest
+	16, // 24: financial.FinancialService.AddBusinessToFinancialPeriod:input_type -> financial.AddBusinessToFinancialPeriodRequest
+	17, // 25: financial.FinancialService.RemoveBusinessFromFinancialPeriod:input_type -> financial.RemoveBusinessFromFinancialPeriodRequest
+	2,  // 26: financial.FinancialService.CreateFinancialPeriod:output_type -> financial.FinancialPeriodResponse
+	2,  // 27: financial.FinancialService.GetFinancialPeriodByID:output_type -> financial.FinancialPeriodResponse
+	2,  // 28: financial.FinancialService.GetFinancialPeriodByBusinessID:output_type -> financial.FinancialPeriodResponse
+	2,  // 29: financial.FinancialService.GetFinancialPeriodByUserID:output_type -> financial.FinancialPeriodResponse
+	2,  // 30: financial.FinancialService.GetFinancialPeriodByBusinessIDAndUserID:output_type -> financial.FinancialPeriodResponse
+	2,  // 31: financial.FinancialService.GetFinancialPeriodByBusinessIDAndUserIDAndPeriod:output_type -> financial.FinancialPeriodResponse
+	2,  // 32: financial.FinancialService.GetFinancialPeriodByBusinessIDAndUserIDAndPeriodAndYear:output_type -> financial.FinancialPeriodResponse
+	20, // 33: financial.FinancialService.CloseFinancialPeriod:output_type -> financial.StatusResponse
+	20, // 34: financial.FinancialService.ReopenFinancialPeriod:output_type -> financial.StatusResponse
+	12, // 35: financial.FinancialService.GetFinancialPeriodsByUserID:output_type -> financial.GetFinancialPeriodsResponse
+	20, // 36: financial.FinancialService.AddUserToFinancialPeriod:output_type -> financial.StatusResponse
+	20, // 37: financial.FinancialService.RemoveUserFromFinancialPeriod:output_type -> financial.StatusResponse
+	12, // 38: financial.FinancialService.GetFinancialPeriodsByBusinessID:output_type -> financial.GetFinancialPeriodsResponse
+	20, // 39: financial.FinancialService.AddBusinessToFinancialPeriod:output_type -> financial.StatusResponse
+	20, // 40: financial.FinancialService.RemoveBusinessFromFinancialPeriod:output_type -> financial.StatusResponse
+	26, // [26:41] is the sub-list for method output_type
+	11, // [11:26] is the sub-list for method input_type
+	11, // [11:11] is the sub-list for extension type_name
+	11, // [11:11] is the sub-list for extension extendee
+	0,  // [0:11] is the sub-list for field type_name
 }
 
 func init() { file_proto_financial_v1_financial_proto_init() }
@@ -1228,7 +1361,7 @@ func file_proto_financial_v1_financial_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_proto_financial_v1_financial_proto_rawDesc), len(file_proto_financial_v1_financial_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   19,
+			NumMessages:   21,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

@@ -20,32 +20,27 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	UserService_GetUserByID_FullMethodName                 = "/user.v1.UserService/GetUserByID"
-	UserService_CreateUser_FullMethodName                  = "/user.v1.UserService/CreateUser"
-	UserService_UpdateUser_FullMethodName                  = "/user.v1.UserService/UpdateUser"
-	UserService_DeleteUser_FullMethodName                  = "/user.v1.UserService/DeleteUser"
-	UserService_GetAllUsers_FullMethodName                 = "/user.v1.UserService/GetAllUsers"
-	UserService_ActivateUser_FullMethodName                = "/user.v1.UserService/ActivateUser"
-	UserService_ActivateUserByPhone_FullMethodName         = "/user.v1.UserService/ActivateUserByPhone"
-	UserService_ActivateUserByEmail_FullMethodName         = "/user.v1.UserService/ActivateUserByEmail"
-	UserService_DeactivateUser_FullMethodName              = "/user.v1.UserService/DeactivateUser"
-	UserService_RegisterWithMobileOTP_FullMethodName       = "/user.v1.UserService/RegisterWithMobileOTP"
-	UserService_VerifyMobileOTP_FullMethodName             = "/user.v1.UserService/VerifyMobileOTP"
-	UserService_GetUserByEmail_FullMethodName              = "/user.v1.UserService/GetUserByEmail"
-	UserService_GetUserByPhone_FullMethodName              = "/user.v1.UserService/GetUserByPhone"
-	UserService_GetUserByUsername_FullMethodName           = "/user.v1.UserService/GetUserByUsername"
-	UserService_ChangePassword_FullMethodName              = "/user.v1.UserService/ChangePassword"
-	UserService_ResetPassword_FullMethodName               = "/user.v1.UserService/ResetPassword"
-	UserService_AssignRoleToUser_FullMethodName            = "/user.v1.UserService/AssignRoleToUser"
-	UserService_RemoveRoleFromUser_FullMethodName          = "/user.v1.UserService/RemoveRoleFromUser"
-	UserService_GetUserRole_FullMethodName                 = "/user.v1.UserService/GetUserRole"
-	UserService_GetUserBusinesses_FullMethodName           = "/user.v1.UserService/GetUserBusinesses"
-	UserService_GetUsersByBusinessID_FullMethodName        = "/user.v1.UserService/GetUsersByBusinessID"
-	UserService_GetUserFinancialPeriods_FullMethodName     = "/user.v1.UserService/GetUserFinancialPeriods"
-	UserService_GetUsersByFinancialPeriodID_FullMethodName = "/user.v1.UserService/GetUsersByFinancialPeriodID"
-	UserService_SearchUsers_FullMethodName                 = "/user.v1.UserService/SearchUsers"
-	UserService_GetUsersByStatus_FullMethodName            = "/user.v1.UserService/GetUsersByStatus"
-	UserService_GetUsersCreatedBetween_FullMethodName      = "/user.v1.UserService/GetUsersCreatedBetween"
+	UserService_GetUserByID_FullMethodName         = "/user.UserService/GetUserByID"
+	UserService_CreateUser_FullMethodName          = "/user.UserService/CreateUser"
+	UserService_UpdateUser_FullMethodName          = "/user.UserService/UpdateUser"
+	UserService_DeleteUser_FullMethodName          = "/user.UserService/DeleteUser"
+	UserService_GetAllUsers_FullMethodName         = "/user.UserService/GetAllUsers"
+	UserService_ActivateUser_FullMethodName        = "/user.UserService/ActivateUser"
+	UserService_ActivateUserByPhone_FullMethodName = "/user.UserService/ActivateUserByPhone"
+	UserService_ActivateUserByEmail_FullMethodName = "/user.UserService/ActivateUserByEmail"
+	UserService_DeactivateUser_FullMethodName      = "/user.UserService/DeactivateUser"
+	UserService_VerifyMobileOTP_FullMethodName     = "/user.UserService/VerifyMobileOTP"
+	UserService_GetUserByEmail_FullMethodName      = "/user.UserService/GetUserByEmail"
+	UserService_GetUserByPhone_FullMethodName      = "/user.UserService/GetUserByPhone"
+	UserService_GetUserByUsername_FullMethodName   = "/user.UserService/GetUserByUsername"
+	UserService_ChangePassword_FullMethodName      = "/user.UserService/ChangePassword"
+	UserService_ResetPassword_FullMethodName       = "/user.UserService/ResetPassword"
+	UserService_AssignRoleToUser_FullMethodName    = "/user.UserService/AssignRoleToUser"
+	UserService_RemoveRoleFromUser_FullMethodName  = "/user.UserService/RemoveRoleFromUser"
+	UserService_GetUserRole_FullMethodName         = "/user.UserService/GetUserRole"
+	UserService_RegisterMobile_FullMethodName      = "/user.UserService/RegisterMobile"
+	UserService_VerifyAndCreateUser_FullMethodName = "/user.UserService/VerifyAndCreateUser"
+	UserService_AdminCreateUser_FullMethodName     = "/user.UserService/AdminCreateUser"
 )
 
 // UserServiceClient is the client API for UserService service.
@@ -66,7 +61,6 @@ type UserServiceClient interface {
 	ActivateUserByEmail(ctx context.Context, in *ActivateUserByEmailRequest, opts ...grpc.CallOption) (*StatusResponse, error)
 	DeactivateUser(ctx context.Context, in *DeactivateUserRequest, opts ...grpc.CallOption) (*StatusResponse, error)
 	// Authentication & OTP
-	RegisterWithMobileOTP(ctx context.Context, in *RegisterWithMobileOTPRequest, opts ...grpc.CallOption) (*UserResponse, error)
 	VerifyMobileOTP(ctx context.Context, in *VerifyMobileOTPRequest, opts ...grpc.CallOption) (*StatusResponse, error)
 	// User lookup
 	GetUserByEmail(ctx context.Context, in *GetUserByEmailRequest, opts ...grpc.CallOption) (*UserResponse, error)
@@ -79,16 +73,10 @@ type UserServiceClient interface {
 	AssignRoleToUser(ctx context.Context, in *AssignRoleToUserRequest, opts ...grpc.CallOption) (*StatusResponse, error)
 	RemoveRoleFromUser(ctx context.Context, in *RemoveRoleFromUserRequest, opts ...grpc.CallOption) (*StatusResponse, error)
 	GetUserRole(ctx context.Context, in *GetUserRoleRequest, opts ...grpc.CallOption) (*RoleResponse, error)
-	// Business access
-	GetUserBusinesses(ctx context.Context, in *GetUserBusinessesRequest, opts ...grpc.CallOption) (*GetUserBusinessesResponse, error)
-	GetUsersByBusinessID(ctx context.Context, in *GetUsersByBusinessIDRequest, opts ...grpc.CallOption) (*GetUsersByBusinessIDResponse, error)
-	// Financial period access
-	GetUserFinancialPeriods(ctx context.Context, in *GetUserFinancialPeriodsRequest, opts ...grpc.CallOption) (*GetUserFinancialPeriodsResponse, error)
-	GetUsersByFinancialPeriodID(ctx context.Context, in *GetUsersByFinancialPeriodIDRequest, opts ...grpc.CallOption) (*GetUsersByFinancialPeriodIDResponse, error)
-	// Search and filter
-	SearchUsers(ctx context.Context, in *SearchUsersRequest, opts ...grpc.CallOption) (*SearchUsersResponse, error)
-	GetUsersByStatus(ctx context.Context, in *GetUsersByStatusRequest, opts ...grpc.CallOption) (*GetUsersByStatusResponse, error)
-	GetUsersCreatedBetween(ctx context.Context, in *GetUsersCreatedBetweenRequest, opts ...grpc.CallOption) (*GetUsersCreatedBetweenResponse, error)
+	// Multi-step registration process
+	RegisterMobile(ctx context.Context, in *RegisterMobileRequest, opts ...grpc.CallOption) (*RegisterMobileResponse, error)
+	VerifyAndCreateUser(ctx context.Context, in *VerifyAndCreateUserRequest, opts ...grpc.CallOption) (*VerifyAndCreateUserResponse, error)
+	AdminCreateUser(ctx context.Context, in *AdminCreateUserRequest, opts ...grpc.CallOption) (*AdminCreateUserResponse, error)
 }
 
 type userServiceClient struct {
@@ -189,16 +177,6 @@ func (c *userServiceClient) DeactivateUser(ctx context.Context, in *DeactivateUs
 	return out, nil
 }
 
-func (c *userServiceClient) RegisterWithMobileOTP(ctx context.Context, in *RegisterWithMobileOTPRequest, opts ...grpc.CallOption) (*UserResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(UserResponse)
-	err := c.cc.Invoke(ctx, UserService_RegisterWithMobileOTP_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 func (c *userServiceClient) VerifyMobileOTP(ctx context.Context, in *VerifyMobileOTPRequest, opts ...grpc.CallOption) (*StatusResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(StatusResponse)
@@ -289,70 +267,30 @@ func (c *userServiceClient) GetUserRole(ctx context.Context, in *GetUserRoleRequ
 	return out, nil
 }
 
-func (c *userServiceClient) GetUserBusinesses(ctx context.Context, in *GetUserBusinessesRequest, opts ...grpc.CallOption) (*GetUserBusinessesResponse, error) {
+func (c *userServiceClient) RegisterMobile(ctx context.Context, in *RegisterMobileRequest, opts ...grpc.CallOption) (*RegisterMobileResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetUserBusinessesResponse)
-	err := c.cc.Invoke(ctx, UserService_GetUserBusinesses_FullMethodName, in, out, cOpts...)
+	out := new(RegisterMobileResponse)
+	err := c.cc.Invoke(ctx, UserService_RegisterMobile_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *userServiceClient) GetUsersByBusinessID(ctx context.Context, in *GetUsersByBusinessIDRequest, opts ...grpc.CallOption) (*GetUsersByBusinessIDResponse, error) {
+func (c *userServiceClient) VerifyAndCreateUser(ctx context.Context, in *VerifyAndCreateUserRequest, opts ...grpc.CallOption) (*VerifyAndCreateUserResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetUsersByBusinessIDResponse)
-	err := c.cc.Invoke(ctx, UserService_GetUsersByBusinessID_FullMethodName, in, out, cOpts...)
+	out := new(VerifyAndCreateUserResponse)
+	err := c.cc.Invoke(ctx, UserService_VerifyAndCreateUser_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *userServiceClient) GetUserFinancialPeriods(ctx context.Context, in *GetUserFinancialPeriodsRequest, opts ...grpc.CallOption) (*GetUserFinancialPeriodsResponse, error) {
+func (c *userServiceClient) AdminCreateUser(ctx context.Context, in *AdminCreateUserRequest, opts ...grpc.CallOption) (*AdminCreateUserResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetUserFinancialPeriodsResponse)
-	err := c.cc.Invoke(ctx, UserService_GetUserFinancialPeriods_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *userServiceClient) GetUsersByFinancialPeriodID(ctx context.Context, in *GetUsersByFinancialPeriodIDRequest, opts ...grpc.CallOption) (*GetUsersByFinancialPeriodIDResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetUsersByFinancialPeriodIDResponse)
-	err := c.cc.Invoke(ctx, UserService_GetUsersByFinancialPeriodID_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *userServiceClient) SearchUsers(ctx context.Context, in *SearchUsersRequest, opts ...grpc.CallOption) (*SearchUsersResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(SearchUsersResponse)
-	err := c.cc.Invoke(ctx, UserService_SearchUsers_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *userServiceClient) GetUsersByStatus(ctx context.Context, in *GetUsersByStatusRequest, opts ...grpc.CallOption) (*GetUsersByStatusResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetUsersByStatusResponse)
-	err := c.cc.Invoke(ctx, UserService_GetUsersByStatus_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *userServiceClient) GetUsersCreatedBetween(ctx context.Context, in *GetUsersCreatedBetweenRequest, opts ...grpc.CallOption) (*GetUsersCreatedBetweenResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetUsersCreatedBetweenResponse)
-	err := c.cc.Invoke(ctx, UserService_GetUsersCreatedBetween_FullMethodName, in, out, cOpts...)
+	out := new(AdminCreateUserResponse)
+	err := c.cc.Invoke(ctx, UserService_AdminCreateUser_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -377,7 +315,6 @@ type UserServiceServer interface {
 	ActivateUserByEmail(context.Context, *ActivateUserByEmailRequest) (*StatusResponse, error)
 	DeactivateUser(context.Context, *DeactivateUserRequest) (*StatusResponse, error)
 	// Authentication & OTP
-	RegisterWithMobileOTP(context.Context, *RegisterWithMobileOTPRequest) (*UserResponse, error)
 	VerifyMobileOTP(context.Context, *VerifyMobileOTPRequest) (*StatusResponse, error)
 	// User lookup
 	GetUserByEmail(context.Context, *GetUserByEmailRequest) (*UserResponse, error)
@@ -390,16 +327,10 @@ type UserServiceServer interface {
 	AssignRoleToUser(context.Context, *AssignRoleToUserRequest) (*StatusResponse, error)
 	RemoveRoleFromUser(context.Context, *RemoveRoleFromUserRequest) (*StatusResponse, error)
 	GetUserRole(context.Context, *GetUserRoleRequest) (*RoleResponse, error)
-	// Business access
-	GetUserBusinesses(context.Context, *GetUserBusinessesRequest) (*GetUserBusinessesResponse, error)
-	GetUsersByBusinessID(context.Context, *GetUsersByBusinessIDRequest) (*GetUsersByBusinessIDResponse, error)
-	// Financial period access
-	GetUserFinancialPeriods(context.Context, *GetUserFinancialPeriodsRequest) (*GetUserFinancialPeriodsResponse, error)
-	GetUsersByFinancialPeriodID(context.Context, *GetUsersByFinancialPeriodIDRequest) (*GetUsersByFinancialPeriodIDResponse, error)
-	// Search and filter
-	SearchUsers(context.Context, *SearchUsersRequest) (*SearchUsersResponse, error)
-	GetUsersByStatus(context.Context, *GetUsersByStatusRequest) (*GetUsersByStatusResponse, error)
-	GetUsersCreatedBetween(context.Context, *GetUsersCreatedBetweenRequest) (*GetUsersCreatedBetweenResponse, error)
+	// Multi-step registration process
+	RegisterMobile(context.Context, *RegisterMobileRequest) (*RegisterMobileResponse, error)
+	VerifyAndCreateUser(context.Context, *VerifyAndCreateUserRequest) (*VerifyAndCreateUserResponse, error)
+	AdminCreateUser(context.Context, *AdminCreateUserRequest) (*AdminCreateUserResponse, error)
 	mustEmbedUnimplementedUserServiceServer()
 }
 
@@ -437,9 +368,6 @@ func (UnimplementedUserServiceServer) ActivateUserByEmail(context.Context, *Acti
 func (UnimplementedUserServiceServer) DeactivateUser(context.Context, *DeactivateUserRequest) (*StatusResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeactivateUser not implemented")
 }
-func (UnimplementedUserServiceServer) RegisterWithMobileOTP(context.Context, *RegisterWithMobileOTPRequest) (*UserResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method RegisterWithMobileOTP not implemented")
-}
 func (UnimplementedUserServiceServer) VerifyMobileOTP(context.Context, *VerifyMobileOTPRequest) (*StatusResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method VerifyMobileOTP not implemented")
 }
@@ -467,26 +395,14 @@ func (UnimplementedUserServiceServer) RemoveRoleFromUser(context.Context, *Remov
 func (UnimplementedUserServiceServer) GetUserRole(context.Context, *GetUserRoleRequest) (*RoleResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetUserRole not implemented")
 }
-func (UnimplementedUserServiceServer) GetUserBusinesses(context.Context, *GetUserBusinessesRequest) (*GetUserBusinessesResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetUserBusinesses not implemented")
+func (UnimplementedUserServiceServer) RegisterMobile(context.Context, *RegisterMobileRequest) (*RegisterMobileResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RegisterMobile not implemented")
 }
-func (UnimplementedUserServiceServer) GetUsersByBusinessID(context.Context, *GetUsersByBusinessIDRequest) (*GetUsersByBusinessIDResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetUsersByBusinessID not implemented")
+func (UnimplementedUserServiceServer) VerifyAndCreateUser(context.Context, *VerifyAndCreateUserRequest) (*VerifyAndCreateUserResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method VerifyAndCreateUser not implemented")
 }
-func (UnimplementedUserServiceServer) GetUserFinancialPeriods(context.Context, *GetUserFinancialPeriodsRequest) (*GetUserFinancialPeriodsResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetUserFinancialPeriods not implemented")
-}
-func (UnimplementedUserServiceServer) GetUsersByFinancialPeriodID(context.Context, *GetUsersByFinancialPeriodIDRequest) (*GetUsersByFinancialPeriodIDResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetUsersByFinancialPeriodID not implemented")
-}
-func (UnimplementedUserServiceServer) SearchUsers(context.Context, *SearchUsersRequest) (*SearchUsersResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method SearchUsers not implemented")
-}
-func (UnimplementedUserServiceServer) GetUsersByStatus(context.Context, *GetUsersByStatusRequest) (*GetUsersByStatusResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetUsersByStatus not implemented")
-}
-func (UnimplementedUserServiceServer) GetUsersCreatedBetween(context.Context, *GetUsersCreatedBetweenRequest) (*GetUsersCreatedBetweenResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetUsersCreatedBetween not implemented")
+func (UnimplementedUserServiceServer) AdminCreateUser(context.Context, *AdminCreateUserRequest) (*AdminCreateUserResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AdminCreateUser not implemented")
 }
 func (UnimplementedUserServiceServer) mustEmbedUnimplementedUserServiceServer() {}
 func (UnimplementedUserServiceServer) testEmbeddedByValue()                     {}
@@ -671,24 +587,6 @@ func _UserService_DeactivateUser_Handler(srv interface{}, ctx context.Context, d
 	return interceptor(ctx, in, info, handler)
 }
 
-func _UserService_RegisterWithMobileOTP_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(RegisterWithMobileOTPRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(UserServiceServer).RegisterWithMobileOTP(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: UserService_RegisterWithMobileOTP_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserServiceServer).RegisterWithMobileOTP(ctx, req.(*RegisterWithMobileOTPRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _UserService_VerifyMobileOTP_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(VerifyMobileOTPRequest)
 	if err := dec(in); err != nil {
@@ -851,128 +749,56 @@ func _UserService_GetUserRole_Handler(srv interface{}, ctx context.Context, dec 
 	return interceptor(ctx, in, info, handler)
 }
 
-func _UserService_GetUserBusinesses_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetUserBusinessesRequest)
+func _UserService_RegisterMobile_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RegisterMobileRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(UserServiceServer).GetUserBusinesses(ctx, in)
+		return srv.(UserServiceServer).RegisterMobile(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: UserService_GetUserBusinesses_FullMethodName,
+		FullMethod: UserService_RegisterMobile_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserServiceServer).GetUserBusinesses(ctx, req.(*GetUserBusinessesRequest))
+		return srv.(UserServiceServer).RegisterMobile(ctx, req.(*RegisterMobileRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _UserService_GetUsersByBusinessID_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetUsersByBusinessIDRequest)
+func _UserService_VerifyAndCreateUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(VerifyAndCreateUserRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(UserServiceServer).GetUsersByBusinessID(ctx, in)
+		return srv.(UserServiceServer).VerifyAndCreateUser(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: UserService_GetUsersByBusinessID_FullMethodName,
+		FullMethod: UserService_VerifyAndCreateUser_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserServiceServer).GetUsersByBusinessID(ctx, req.(*GetUsersByBusinessIDRequest))
+		return srv.(UserServiceServer).VerifyAndCreateUser(ctx, req.(*VerifyAndCreateUserRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _UserService_GetUserFinancialPeriods_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetUserFinancialPeriodsRequest)
+func _UserService_AdminCreateUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AdminCreateUserRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(UserServiceServer).GetUserFinancialPeriods(ctx, in)
+		return srv.(UserServiceServer).AdminCreateUser(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: UserService_GetUserFinancialPeriods_FullMethodName,
+		FullMethod: UserService_AdminCreateUser_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserServiceServer).GetUserFinancialPeriods(ctx, req.(*GetUserFinancialPeriodsRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _UserService_GetUsersByFinancialPeriodID_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetUsersByFinancialPeriodIDRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(UserServiceServer).GetUsersByFinancialPeriodID(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: UserService_GetUsersByFinancialPeriodID_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserServiceServer).GetUsersByFinancialPeriodID(ctx, req.(*GetUsersByFinancialPeriodIDRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _UserService_SearchUsers_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(SearchUsersRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(UserServiceServer).SearchUsers(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: UserService_SearchUsers_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserServiceServer).SearchUsers(ctx, req.(*SearchUsersRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _UserService_GetUsersByStatus_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetUsersByStatusRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(UserServiceServer).GetUsersByStatus(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: UserService_GetUsersByStatus_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserServiceServer).GetUsersByStatus(ctx, req.(*GetUsersByStatusRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _UserService_GetUsersCreatedBetween_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetUsersCreatedBetweenRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(UserServiceServer).GetUsersCreatedBetween(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: UserService_GetUsersCreatedBetween_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserServiceServer).GetUsersCreatedBetween(ctx, req.(*GetUsersCreatedBetweenRequest))
+		return srv.(UserServiceServer).AdminCreateUser(ctx, req.(*AdminCreateUserRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -981,7 +807,7 @@ func _UserService_GetUsersCreatedBetween_Handler(srv interface{}, ctx context.Co
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var UserService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "user.v1.UserService",
+	ServiceName: "user.UserService",
 	HandlerType: (*UserServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
@@ -1021,10 +847,6 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _UserService_DeactivateUser_Handler,
 		},
 		{
-			MethodName: "RegisterWithMobileOTP",
-			Handler:    _UserService_RegisterWithMobileOTP_Handler,
-		},
-		{
 			MethodName: "VerifyMobileOTP",
 			Handler:    _UserService_VerifyMobileOTP_Handler,
 		},
@@ -1061,32 +883,16 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _UserService_GetUserRole_Handler,
 		},
 		{
-			MethodName: "GetUserBusinesses",
-			Handler:    _UserService_GetUserBusinesses_Handler,
+			MethodName: "RegisterMobile",
+			Handler:    _UserService_RegisterMobile_Handler,
 		},
 		{
-			MethodName: "GetUsersByBusinessID",
-			Handler:    _UserService_GetUsersByBusinessID_Handler,
+			MethodName: "VerifyAndCreateUser",
+			Handler:    _UserService_VerifyAndCreateUser_Handler,
 		},
 		{
-			MethodName: "GetUserFinancialPeriods",
-			Handler:    _UserService_GetUserFinancialPeriods_Handler,
-		},
-		{
-			MethodName: "GetUsersByFinancialPeriodID",
-			Handler:    _UserService_GetUsersByFinancialPeriodID_Handler,
-		},
-		{
-			MethodName: "SearchUsers",
-			Handler:    _UserService_SearchUsers_Handler,
-		},
-		{
-			MethodName: "GetUsersByStatus",
-			Handler:    _UserService_GetUsersByStatus_Handler,
-		},
-		{
-			MethodName: "GetUsersCreatedBetween",
-			Handler:    _UserService_GetUsersCreatedBetween_Handler,
+			MethodName: "AdminCreateUser",
+			Handler:    _UserService_AdminCreateUser_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
@@ -1094,9 +900,11 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 }
 
 const (
-	UserOTPService_GenerateOTP_FullMethodName = "/user.v1.UserOTPService/GenerateOTP"
-	UserOTPService_VerifyOTP_FullMethodName   = "/user.v1.UserOTPService/VerifyOTP"
-	UserOTPService_ResendOTP_FullMethodName   = "/user.v1.UserOTPService/ResendOTP"
+	UserOTPService_GenerateOTP_FullMethodName             = "/user.UserOTPService/GenerateOTP"
+	UserOTPService_VerifyOTP_FullMethodName               = "/user.UserOTPService/VerifyOTP"
+	UserOTPService_ResendOTP_FullMethodName               = "/user.UserOTPService/ResendOTP"
+	UserOTPService_GenerateRegistrationOTP_FullMethodName = "/user.UserOTPService/GenerateRegistrationOTP"
+	UserOTPService_VerifyRegistrationOTP_FullMethodName   = "/user.UserOTPService/VerifyRegistrationOTP"
 )
 
 // UserOTPServiceClient is the client API for UserOTPService service.
@@ -1108,6 +916,9 @@ type UserOTPServiceClient interface {
 	GenerateOTP(ctx context.Context, in *GenerateOTPRequest, opts ...grpc.CallOption) (*GenerateOTPResponse, error)
 	VerifyOTP(ctx context.Context, in *VerifyOTPRequest, opts ...grpc.CallOption) (*VerifyOTPResponse, error)
 	ResendOTP(ctx context.Context, in *ResendOTPRequest, opts ...grpc.CallOption) (*StatusResponse, error)
+	// New method specifically for registration
+	GenerateRegistrationOTP(ctx context.Context, in *RegisterMobileRequest, opts ...grpc.CallOption) (*StatusResponse, error)
+	VerifyRegistrationOTP(ctx context.Context, in *VerifyOTPRequest, opts ...grpc.CallOption) (*VerifyOTPResponse, error)
 }
 
 type userOTPServiceClient struct {
@@ -1148,6 +959,26 @@ func (c *userOTPServiceClient) ResendOTP(ctx context.Context, in *ResendOTPReque
 	return out, nil
 }
 
+func (c *userOTPServiceClient) GenerateRegistrationOTP(ctx context.Context, in *RegisterMobileRequest, opts ...grpc.CallOption) (*StatusResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(StatusResponse)
+	err := c.cc.Invoke(ctx, UserOTPService_GenerateRegistrationOTP_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userOTPServiceClient) VerifyRegistrationOTP(ctx context.Context, in *VerifyOTPRequest, opts ...grpc.CallOption) (*VerifyOTPResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(VerifyOTPResponse)
+	err := c.cc.Invoke(ctx, UserOTPService_VerifyRegistrationOTP_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // UserOTPServiceServer is the server API for UserOTPService service.
 // All implementations must embed UnimplementedUserOTPServiceServer
 // for forward compatibility.
@@ -1157,6 +988,9 @@ type UserOTPServiceServer interface {
 	GenerateOTP(context.Context, *GenerateOTPRequest) (*GenerateOTPResponse, error)
 	VerifyOTP(context.Context, *VerifyOTPRequest) (*VerifyOTPResponse, error)
 	ResendOTP(context.Context, *ResendOTPRequest) (*StatusResponse, error)
+	// New method specifically for registration
+	GenerateRegistrationOTP(context.Context, *RegisterMobileRequest) (*StatusResponse, error)
+	VerifyRegistrationOTP(context.Context, *VerifyOTPRequest) (*VerifyOTPResponse, error)
 	mustEmbedUnimplementedUserOTPServiceServer()
 }
 
@@ -1175,6 +1009,12 @@ func (UnimplementedUserOTPServiceServer) VerifyOTP(context.Context, *VerifyOTPRe
 }
 func (UnimplementedUserOTPServiceServer) ResendOTP(context.Context, *ResendOTPRequest) (*StatusResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ResendOTP not implemented")
+}
+func (UnimplementedUserOTPServiceServer) GenerateRegistrationOTP(context.Context, *RegisterMobileRequest) (*StatusResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GenerateRegistrationOTP not implemented")
+}
+func (UnimplementedUserOTPServiceServer) VerifyRegistrationOTP(context.Context, *VerifyOTPRequest) (*VerifyOTPResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method VerifyRegistrationOTP not implemented")
 }
 func (UnimplementedUserOTPServiceServer) mustEmbedUnimplementedUserOTPServiceServer() {}
 func (UnimplementedUserOTPServiceServer) testEmbeddedByValue()                        {}
@@ -1251,11 +1091,47 @@ func _UserOTPService_ResendOTP_Handler(srv interface{}, ctx context.Context, dec
 	return interceptor(ctx, in, info, handler)
 }
 
+func _UserOTPService_GenerateRegistrationOTP_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RegisterMobileRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserOTPServiceServer).GenerateRegistrationOTP(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: UserOTPService_GenerateRegistrationOTP_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserOTPServiceServer).GenerateRegistrationOTP(ctx, req.(*RegisterMobileRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserOTPService_VerifyRegistrationOTP_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(VerifyOTPRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserOTPServiceServer).VerifyRegistrationOTP(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: UserOTPService_VerifyRegistrationOTP_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserOTPServiceServer).VerifyRegistrationOTP(ctx, req.(*VerifyOTPRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // UserOTPService_ServiceDesc is the grpc.ServiceDesc for UserOTPService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var UserOTPService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "user.v1.UserOTPService",
+	ServiceName: "user.UserOTPService",
 	HandlerType: (*UserOTPServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
@@ -1270,14 +1146,23 @@ var UserOTPService_ServiceDesc = grpc.ServiceDesc{
 			MethodName: "ResendOTP",
 			Handler:    _UserOTPService_ResendOTP_Handler,
 		},
+		{
+			MethodName: "GenerateRegistrationOTP",
+			Handler:    _UserOTPService_GenerateRegistrationOTP_Handler,
+		},
+		{
+			MethodName: "VerifyRegistrationOTP",
+			Handler:    _UserOTPService_VerifyRegistrationOTP_Handler,
+		},
 	},
 	Streams:  []grpc.StreamDesc{},
 	Metadata: "proto/user/v1/user.proto",
 }
 
 const (
-	UserSMSService_SendOTP_FullMethodName   = "/user.v1.UserSMSService/SendOTP"
-	UserSMSService_ResendOTP_FullMethodName = "/user.v1.UserSMSService/ResendOTP"
+	UserSMSService_SendOTP_FullMethodName             = "/user.UserSMSService/SendOTP"
+	UserSMSService_ResendOTP_FullMethodName           = "/user.UserSMSService/ResendOTP"
+	UserSMSService_SendRegistrationOTP_FullMethodName = "/user.UserSMSService/SendRegistrationOTP"
 )
 
 // UserSMSServiceClient is the client API for UserSMSService service.
@@ -1286,8 +1171,11 @@ const (
 //
 // SMS Service
 type UserSMSServiceClient interface {
+	// Updated to use the revised GenerateOTPRequest
 	SendOTP(ctx context.Context, in *GenerateOTPRequest, opts ...grpc.CallOption) (*StatusResponse, error)
 	ResendOTP(ctx context.Context, in *ResendOTPRequest, opts ...grpc.CallOption) (*StatusResponse, error)
+	// New method for registration SMS
+	SendRegistrationOTP(ctx context.Context, in *RegisterMobileRequest, opts ...grpc.CallOption) (*StatusResponse, error)
 }
 
 type userSMSServiceClient struct {
@@ -1318,14 +1206,27 @@ func (c *userSMSServiceClient) ResendOTP(ctx context.Context, in *ResendOTPReque
 	return out, nil
 }
 
+func (c *userSMSServiceClient) SendRegistrationOTP(ctx context.Context, in *RegisterMobileRequest, opts ...grpc.CallOption) (*StatusResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(StatusResponse)
+	err := c.cc.Invoke(ctx, UserSMSService_SendRegistrationOTP_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // UserSMSServiceServer is the server API for UserSMSService service.
 // All implementations must embed UnimplementedUserSMSServiceServer
 // for forward compatibility.
 //
 // SMS Service
 type UserSMSServiceServer interface {
+	// Updated to use the revised GenerateOTPRequest
 	SendOTP(context.Context, *GenerateOTPRequest) (*StatusResponse, error)
 	ResendOTP(context.Context, *ResendOTPRequest) (*StatusResponse, error)
+	// New method for registration SMS
+	SendRegistrationOTP(context.Context, *RegisterMobileRequest) (*StatusResponse, error)
 	mustEmbedUnimplementedUserSMSServiceServer()
 }
 
@@ -1341,6 +1242,9 @@ func (UnimplementedUserSMSServiceServer) SendOTP(context.Context, *GenerateOTPRe
 }
 func (UnimplementedUserSMSServiceServer) ResendOTP(context.Context, *ResendOTPRequest) (*StatusResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ResendOTP not implemented")
+}
+func (UnimplementedUserSMSServiceServer) SendRegistrationOTP(context.Context, *RegisterMobileRequest) (*StatusResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SendRegistrationOTP not implemented")
 }
 func (UnimplementedUserSMSServiceServer) mustEmbedUnimplementedUserSMSServiceServer() {}
 func (UnimplementedUserSMSServiceServer) testEmbeddedByValue()                        {}
@@ -1399,11 +1303,29 @@ func _UserSMSService_ResendOTP_Handler(srv interface{}, ctx context.Context, dec
 	return interceptor(ctx, in, info, handler)
 }
 
+func _UserSMSService_SendRegistrationOTP_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RegisterMobileRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserSMSServiceServer).SendRegistrationOTP(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: UserSMSService_SendRegistrationOTP_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserSMSServiceServer).SendRegistrationOTP(ctx, req.(*RegisterMobileRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // UserSMSService_ServiceDesc is the grpc.ServiceDesc for UserSMSService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var UserSMSService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "user.v1.UserSMSService",
+	ServiceName: "user.UserSMSService",
 	HandlerType: (*UserSMSServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
@@ -1413,6 +1335,10 @@ var UserSMSService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ResendOTP",
 			Handler:    _UserSMSService_ResendOTP_Handler,
+		},
+		{
+			MethodName: "SendRegistrationOTP",
+			Handler:    _UserSMSService_SendRegistrationOTP_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

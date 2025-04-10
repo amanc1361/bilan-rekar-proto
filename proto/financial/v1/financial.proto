@@ -1,17 +1,13 @@
 syntax = "proto3";
 
-package financial.v1;
+package financial;
+
+option go_package = "github.com/amanc1361/bilan-rekar/gen/proto/financial/v1";
 
 import "google/protobuf/timestamp.proto";
 import "google/protobuf/empty.proto";
 import "proto/user/v1/user.proto";
-
-
-option go_package = "github.com/amanc1361/bilan-rekar-proto/gen/proto/financial/v1";
-
-
-
-
+import "proto/business/v1/business.proto";
 
 // FinancialPeriod message represents a financial period entity
 message FinancialPeriod {
@@ -23,7 +19,8 @@ message FinancialPeriod {
   string description = 6;
   bool is_closed = 7;
   
- 
+  // References - typically handled differently in protobuf
+  business.Business business = 8;  // Only included when needed
 }
 
 // Request and response messages for FinancialService
@@ -112,9 +109,15 @@ message RemoveBusinessFromFinancialPeriodRequest {
   uint64 business_id = 2;
 }
 
+message FinancialPeriodWithUsersResponse {
+  FinancialPeriod period = 1;
+  repeated user.User users = 2;
+}
 
-
-
+message FinancialPeriodWithBusinessesResponse {
+  FinancialPeriod period = 1;
+  repeated business.Business businesses = 2;
+}
 
 message StatusResponse {
   bool success = 1;
@@ -147,4 +150,4 @@ service FinancialService {
   rpc GetFinancialPeriodsByBusinessID(GetFinancialPeriodsByBusinessIDRequest) returns (GetFinancialPeriodsResponse);
   rpc AddBusinessToFinancialPeriod(AddBusinessToFinancialPeriodRequest) returns (StatusResponse);
   rpc RemoveBusinessFromFinancialPeriod(RemoveBusinessFromFinancialPeriodRequest) returns (StatusResponse);
-}
+} 
