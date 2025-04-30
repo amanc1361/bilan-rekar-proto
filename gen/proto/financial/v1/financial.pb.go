@@ -1259,8 +1259,8 @@ const file_proto_financial_v1_financial_proto_rawDesc = "" +
 	"\x1dRemoveUserFromFinancialPeriod\x12/.financial.RemoveUserFromFinancialPeriodRequest\x1a\x19.financial.StatusResponse\x12|\n" +
 	"\x1fGetFinancialPeriodsByBusinessID\x121.financial.GetFinancialPeriodsByBusinessIDRequest\x1a&.financial.GetFinancialPeriodsResponse\x12i\n" +
 	"\x1cAddBusinessToFinancialPeriod\x12..financial.AddBusinessToFinancialPeriodRequest\x1a\x19.financial.StatusResponse\x12s\n" +
-	"!RemoveBusinessFromFinancialPeriod\x123.financial.RemoveBusinessFromFinancialPeriodRequest\x1a\x19.financial.StatusResponseB\x9c\x01\n" +
-	"\rcom.financialB\x0eFinancialProtoP\x01Z7github.com/amanc1361/bilan-rekar/gen/proto/financial/v1\xa2\x02\x03FXX\xaa\x02\tFinancial\xca\x02\tFinancial\xe2\x02\x15Financial\\GPBMetadata\xea\x02\tFinancialb\x06proto3"
+	"!RemoveBusinessFromFinancialPeriod\x123.financial.RemoveBusinessFromFinancialPeriodRequest\x1a\x19.financial.StatusResponseB\xa2\x01\n" +
+	"\rcom.financialB\x0eFinancialProtoP\x01Z=github.com/amanc1361/bilan-rekar-proto/gen/proto/financial/v1\xa2\x02\x03FXX\xaa\x02\tFinancial\xca\x02\tFinancial\xe2\x02\x15Financial\\GPBMetadata\xea\x02\tFinancialb\x06proto3"
 
 var (
 	file_proto_financial_v1_financial_proto_rawDescOnce sync.Once

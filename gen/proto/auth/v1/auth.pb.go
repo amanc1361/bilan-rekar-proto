@@ -781,8 +781,8 @@ const file_proto_auth_v1_auth_proto_rawDesc = "" +
 	"\x06Logout\x12\x13.auth.LogoutRequest\x1a\x14.auth.StatusResponse\x12A\n" +
 	"\fLoginWithOTP\x12\x1c.user.VerifyMobileOTPRequest\x1a\x13.auth.LoginResponse\x12I\n" +
 	"\x14RequestPasswordReset\x12\x1b.user.GetUserByEmailRequest\x1a\x14.auth.StatusResponse\x12J\n" +
-	"\x16ResetPasswordWithToken\x12\x1a.user.ResetPasswordRequest\x1a\x14.auth.StatusResponseBy\n" +
-	"\bcom.authB\tAuthProtoP\x01Z2github.com/amanc1361/bilan-rekar/gen/proto/auth/v1\xa2\x02\x03AXX\xaa\x02\x04Auth\xca\x02\x04Auth\xe2\x02\x10Auth\\GPBMetadata\xea\x02\x04Authb\x06proto3"
+	"\x16ResetPasswordWithToken\x12\x1a.user.ResetPasswordRequest\x1a\x14.auth.StatusResponseB\x7f\n" +
+	"\bcom.authB\tAuthProtoP\x01Z8github.com/amanc1361/bilan-rekar-proto/gen/proto/auth/v1\xa2\x02\x03AXX\xaa\x02\x04Auth\xca\x02\x04Auth\xe2\x02\x10Auth\\GPBMetadata\xea\x02\x04Authb\x06proto3"
 
 var (
 	file_proto_auth_v1_auth_proto_rawDescOnce sync.Once

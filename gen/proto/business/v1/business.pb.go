@@ -1078,8 +1078,8 @@ const file_proto_business_v1_business_proto_rawDesc = "" +
 	"\x11AddUserToBusiness\x12\".business.AddUserToBusinessRequest\x1a\x18.business.StatusResponse\x12[\n" +
 	"\x16RemoveUserFromBusiness\x12'.business.RemoveUserFromBusinessRequest\x1a\x18.business.StatusResponse\x12Y\n" +
 	"\x10GetBusinessUsers\x12!.business.GetBusinessUsersRequest\x1a\".business.GetBusinessUsersResponse\x12z\n" +
-	"\x1bGetBusinessFinancialPeriods\x12,.business.GetBusinessFinancialPeriodsRequest\x1a-.business.GetBusinessFinancialPeriodsResponseB\x95\x01\n" +
-	"\fcom.businessB\rBusinessProtoP\x01Z6github.com/amanc1361/bilan-rekar/gen/proto/business/v1\xa2\x02\x03BXX\xaa\x02\bBusiness\xca\x02\bBusiness\xe2\x02\x14Business\\GPBMetadata\xea\x02\bBusinessb\x06proto3"
+	"\x1bGetBusinessFinancialPeriods\x12,.business.GetBusinessFinancialPeriodsRequest\x1a-.business.GetBusinessFinancialPeriodsResponseB\x9b\x01\n" +
+	"\fcom.businessB\rBusinessProtoP\x01Z<github.com/amanc1361/bilan-rekar-proto/gen/proto/business/v1\xa2\x02\x03BXX\xaa\x02\bBusiness\xca\x02\bBusiness\xe2\x02\x14Business\\GPBMetadata\xea\x02\bBusinessb\x06proto3"
 
 var (
 	file_proto_business_v1_business_proto_rawDescOnce sync.Once

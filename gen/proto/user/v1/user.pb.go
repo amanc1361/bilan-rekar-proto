@@ -2059,8 +2059,8 @@ const file_proto_user_v1_user_proto_rawDesc = "" +
 	"\x0eUserSMSService\x129\n" +
 	"\aSendOTP\x12\x18.user.GenerateOTPRequest\x1a\x14.user.StatusResponse\x129\n" +
 	"\tResendOTP\x12\x16.user.ResendOTPRequest\x1a\x14.user.StatusResponse\x12H\n" +
-	"\x13SendRegistrationOTP\x12\x1b.user.RegisterMobileRequest\x1a\x14.user.StatusResponseBy\n" +
-	"\bcom.userB\tUserProtoP\x01Z2github.com/amanc1361/bilan-rekar/gen/proto/user/v1\xa2\x02\x03UXX\xaa\x02\x04User\xca\x02\x04User\xe2\x02\x10User\\GPBMetadata\xea\x02\x04Userb\x06proto3"
+	"\x13SendRegistrationOTP\x12\x1b.user.RegisterMobileRequest\x1a\x14.user.StatusResponseB\x7f\n" +
+	"\bcom.userB\tUserProtoP\x01Z8github.com/amanc1361/bilan-rekar-proto/gen/proto/user/v1\xa2\x02\x03UXX\xaa\x02\x04User\xca\x02\x04User\xe2\x02\x10User\\GPBMetadata\xea\x02\x04Userb\x06proto3"
 
 var (
 	file_proto_user_v1_user_proto_rawDescOnce sync.Once
