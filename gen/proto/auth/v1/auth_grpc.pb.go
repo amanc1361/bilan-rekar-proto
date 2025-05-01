@@ -8,7 +8,6 @@ package v1
 
 import (
 	context "context"
-	v1 "github.com/amanc1361/bilan-rekar-proto/gen/proto/user/v1"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -20,40 +19,38 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	AuthService_Login_FullMethodName                  = "/auth.AuthService/Login"
-	AuthService_RefreshToken_FullMethodName           = "/auth.AuthService/RefreshToken"
-	AuthService_ValidateToken_FullMethodName          = "/auth.AuthService/ValidateToken"
-	AuthService_CheckPermission_FullMethodName        = "/auth.AuthService/CheckPermission"
-	AuthService_CheckRole_FullMethodName              = "/auth.AuthService/CheckRole"
-	AuthService_Logout_FullMethodName                 = "/auth.AuthService/Logout"
-	AuthService_LoginWithOTP_FullMethodName           = "/auth.AuthService/LoginWithOTP"
-	AuthService_RequestPasswordReset_FullMethodName   = "/auth.AuthService/RequestPasswordReset"
-	AuthService_ResetPasswordWithToken_FullMethodName = "/auth.AuthService/ResetPasswordWithToken"
+	AuthService_Login_FullMethodName                  = "/auth.v1.AuthService/Login"
+	AuthService_RefreshToken_FullMethodName           = "/auth.v1.AuthService/RefreshToken"
+	AuthService_ValidateToken_FullMethodName          = "/auth.v1.AuthService/ValidateToken"
+	AuthService_Logout_FullMethodName                 = "/auth.v1.AuthService/Logout"
+	AuthService_RequestMobileOTP_FullMethodName       = "/auth.v1.AuthService/RequestMobileOTP"
+	AuthService_VerifyMobileOTP_FullMethodName        = "/auth.v1.AuthService/VerifyMobileOTP"
+	AuthService_CheckPermission_FullMethodName        = "/auth.v1.AuthService/CheckPermission"
+	AuthService_CheckRole_FullMethodName              = "/auth.v1.AuthService/CheckRole"
+	AuthService_RequestPasswordReset_FullMethodName   = "/auth.v1.AuthService/RequestPasswordReset"
+	AuthService_ResetPasswordWithToken_FullMethodName = "/auth.v1.AuthService/ResetPasswordWithToken"
 )
 
 // AuthServiceClient is the client API for AuthService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 //
-// Authentication service
+// ---------- Service ----------
 type AuthServiceClient interface {
-	// Login with username/password
+	// --- Password / Token ---
 	Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*LoginResponse, error)
-	// Refresh token to get a new access token
 	RefreshToken(ctx context.Context, in *RefreshTokenRequest, opts ...grpc.CallOption) (*LoginResponse, error)
-	// Validate a token and get its claims
 	ValidateToken(ctx context.Context, in *ValidateTokenRequest, opts ...grpc.CallOption) (*ValidateTokenResponse, error)
-	// Authorization checks
+	Logout(ctx context.Context, in *LogoutRequest, opts ...grpc.CallOption) (*StatusResponse, error)
+	// --- OTP (Two-step) ---
+	RequestMobileOTP(ctx context.Context, in *RequestMobileOTPRequest, opts ...grpc.CallOption) (*StatusResponse, error)
+	VerifyMobileOTP(ctx context.Context, in *VerifyMobileOTPRequest, opts ...grpc.CallOption) (*LoginResponse, error)
+	// --- RBAC helpers ---
 	CheckPermission(ctx context.Context, in *CheckPermissionRequest, opts ...grpc.CallOption) (*AuthorizationResponse, error)
 	CheckRole(ctx context.Context, in *CheckRoleRequest, opts ...grpc.CallOption) (*AuthorizationResponse, error)
-	// Logout and invalidate token
-	Logout(ctx context.Context, in *LogoutRequest, opts ...grpc.CallOption) (*StatusResponse, error)
-	// Login with OTP (after mobile verification)
-	LoginWithOTP(ctx context.Context, in *v1.VerifyMobileOTPRequest, opts ...grpc.CallOption) (*LoginResponse, error)
-	// Generate and send password reset token
-	RequestPasswordReset(ctx context.Context, in *v1.GetUserByEmailRequest, opts ...grpc.CallOption) (*StatusResponse, error)
-	// Verify password reset token and set new password
-	ResetPasswordWithToken(ctx context.Context, in *v1.ResetPasswordRequest, opts ...grpc.CallOption) (*StatusResponse, error)
+	// --- Forgotten-password flow (اختیاری) ---
+	RequestPasswordReset(ctx context.Context, in *RequestPasswordResetRequest, opts ...grpc.CallOption) (*StatusResponse, error)
+	ResetPasswordWithToken(ctx context.Context, in *ResetPasswordWithTokenRequest, opts ...grpc.CallOption) (*StatusResponse, error)
 }
 
 type authServiceClient struct {
@@ -94,6 +91,36 @@ func (c *authServiceClient) ValidateToken(ctx context.Context, in *ValidateToken
 	return out, nil
 }
 
+func (c *authServiceClient) Logout(ctx context.Context, in *LogoutRequest, opts ...grpc.CallOption) (*StatusResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(StatusResponse)
+	err := c.cc.Invoke(ctx, AuthService_Logout_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *authServiceClient) RequestMobileOTP(ctx context.Context, in *RequestMobileOTPRequest, opts ...grpc.CallOption) (*StatusResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(StatusResponse)
+	err := c.cc.Invoke(ctx, AuthService_RequestMobileOTP_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *authServiceClient) VerifyMobileOTP(ctx context.Context, in *VerifyMobileOTPRequest, opts ...grpc.CallOption) (*LoginResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(LoginResponse)
+	err := c.cc.Invoke(ctx, AuthService_VerifyMobileOTP_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *authServiceClient) CheckPermission(ctx context.Context, in *CheckPermissionRequest, opts ...grpc.CallOption) (*AuthorizationResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(AuthorizationResponse)
@@ -114,27 +141,7 @@ func (c *authServiceClient) CheckRole(ctx context.Context, in *CheckRoleRequest,
 	return out, nil
 }
 
-func (c *authServiceClient) Logout(ctx context.Context, in *LogoutRequest, opts ...grpc.CallOption) (*StatusResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(StatusResponse)
-	err := c.cc.Invoke(ctx, AuthService_Logout_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *authServiceClient) LoginWithOTP(ctx context.Context, in *v1.VerifyMobileOTPRequest, opts ...grpc.CallOption) (*LoginResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(LoginResponse)
-	err := c.cc.Invoke(ctx, AuthService_LoginWithOTP_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *authServiceClient) RequestPasswordReset(ctx context.Context, in *v1.GetUserByEmailRequest, opts ...grpc.CallOption) (*StatusResponse, error) {
+func (c *authServiceClient) RequestPasswordReset(ctx context.Context, in *RequestPasswordResetRequest, opts ...grpc.CallOption) (*StatusResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(StatusResponse)
 	err := c.cc.Invoke(ctx, AuthService_RequestPasswordReset_FullMethodName, in, out, cOpts...)
@@ -144,7 +151,7 @@ func (c *authServiceClient) RequestPasswordReset(ctx context.Context, in *v1.Get
 	return out, nil
 }
 
-func (c *authServiceClient) ResetPasswordWithToken(ctx context.Context, in *v1.ResetPasswordRequest, opts ...grpc.CallOption) (*StatusResponse, error) {
+func (c *authServiceClient) ResetPasswordWithToken(ctx context.Context, in *ResetPasswordWithTokenRequest, opts ...grpc.CallOption) (*StatusResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(StatusResponse)
 	err := c.cc.Invoke(ctx, AuthService_ResetPasswordWithToken_FullMethodName, in, out, cOpts...)
@@ -158,25 +165,22 @@ func (c *authServiceClient) ResetPasswordWithToken(ctx context.Context, in *v1.R
 // All implementations must embed UnimplementedAuthServiceServer
 // for forward compatibility.
 //
-// Authentication service
+// ---------- Service ----------
 type AuthServiceServer interface {
-	// Login with username/password
+	// --- Password / Token ---
 	Login(context.Context, *LoginRequest) (*LoginResponse, error)
-	// Refresh token to get a new access token
 	RefreshToken(context.Context, *RefreshTokenRequest) (*LoginResponse, error)
-	// Validate a token and get its claims
 	ValidateToken(context.Context, *ValidateTokenRequest) (*ValidateTokenResponse, error)
-	// Authorization checks
+	Logout(context.Context, *LogoutRequest) (*StatusResponse, error)
+	// --- OTP (Two-step) ---
+	RequestMobileOTP(context.Context, *RequestMobileOTPRequest) (*StatusResponse, error)
+	VerifyMobileOTP(context.Context, *VerifyMobileOTPRequest) (*LoginResponse, error)
+	// --- RBAC helpers ---
 	CheckPermission(context.Context, *CheckPermissionRequest) (*AuthorizationResponse, error)
 	CheckRole(context.Context, *CheckRoleRequest) (*AuthorizationResponse, error)
-	// Logout and invalidate token
-	Logout(context.Context, *LogoutRequest) (*StatusResponse, error)
-	// Login with OTP (after mobile verification)
-	LoginWithOTP(context.Context, *v1.VerifyMobileOTPRequest) (*LoginResponse, error)
-	// Generate and send password reset token
-	RequestPasswordReset(context.Context, *v1.GetUserByEmailRequest) (*StatusResponse, error)
-	// Verify password reset token and set new password
-	ResetPasswordWithToken(context.Context, *v1.ResetPasswordRequest) (*StatusResponse, error)
+	// --- Forgotten-password flow (اختیاری) ---
+	RequestPasswordReset(context.Context, *RequestPasswordResetRequest) (*StatusResponse, error)
+	ResetPasswordWithToken(context.Context, *ResetPasswordWithTokenRequest) (*StatusResponse, error)
 	mustEmbedUnimplementedAuthServiceServer()
 }
 
@@ -196,22 +200,25 @@ func (UnimplementedAuthServiceServer) RefreshToken(context.Context, *RefreshToke
 func (UnimplementedAuthServiceServer) ValidateToken(context.Context, *ValidateTokenRequest) (*ValidateTokenResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ValidateToken not implemented")
 }
+func (UnimplementedAuthServiceServer) Logout(context.Context, *LogoutRequest) (*StatusResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Logout not implemented")
+}
+func (UnimplementedAuthServiceServer) RequestMobileOTP(context.Context, *RequestMobileOTPRequest) (*StatusResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RequestMobileOTP not implemented")
+}
+func (UnimplementedAuthServiceServer) VerifyMobileOTP(context.Context, *VerifyMobileOTPRequest) (*LoginResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method VerifyMobileOTP not implemented")
+}
 func (UnimplementedAuthServiceServer) CheckPermission(context.Context, *CheckPermissionRequest) (*AuthorizationResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CheckPermission not implemented")
 }
 func (UnimplementedAuthServiceServer) CheckRole(context.Context, *CheckRoleRequest) (*AuthorizationResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CheckRole not implemented")
 }
-func (UnimplementedAuthServiceServer) Logout(context.Context, *LogoutRequest) (*StatusResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Logout not implemented")
-}
-func (UnimplementedAuthServiceServer) LoginWithOTP(context.Context, *v1.VerifyMobileOTPRequest) (*LoginResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method LoginWithOTP not implemented")
-}
-func (UnimplementedAuthServiceServer) RequestPasswordReset(context.Context, *v1.GetUserByEmailRequest) (*StatusResponse, error) {
+func (UnimplementedAuthServiceServer) RequestPasswordReset(context.Context, *RequestPasswordResetRequest) (*StatusResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RequestPasswordReset not implemented")
 }
-func (UnimplementedAuthServiceServer) ResetPasswordWithToken(context.Context, *v1.ResetPasswordRequest) (*StatusResponse, error) {
+func (UnimplementedAuthServiceServer) ResetPasswordWithToken(context.Context, *ResetPasswordWithTokenRequest) (*StatusResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ResetPasswordWithToken not implemented")
 }
 func (UnimplementedAuthServiceServer) mustEmbedUnimplementedAuthServiceServer() {}
@@ -289,6 +296,60 @@ func _AuthService_ValidateToken_Handler(srv interface{}, ctx context.Context, de
 	return interceptor(ctx, in, info, handler)
 }
 
+func _AuthService_Logout_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(LogoutRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthServiceServer).Logout(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AuthService_Logout_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthServiceServer).Logout(ctx, req.(*LogoutRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AuthService_RequestMobileOTP_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RequestMobileOTPRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthServiceServer).RequestMobileOTP(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AuthService_RequestMobileOTP_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthServiceServer).RequestMobileOTP(ctx, req.(*RequestMobileOTPRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AuthService_VerifyMobileOTP_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(VerifyMobileOTPRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthServiceServer).VerifyMobileOTP(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AuthService_VerifyMobileOTP_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthServiceServer).VerifyMobileOTP(ctx, req.(*VerifyMobileOTPRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _AuthService_CheckPermission_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(CheckPermissionRequest)
 	if err := dec(in); err != nil {
@@ -325,44 +386,8 @@ func _AuthService_CheckRole_Handler(srv interface{}, ctx context.Context, dec fu
 	return interceptor(ctx, in, info, handler)
 }
 
-func _AuthService_Logout_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(LogoutRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(AuthServiceServer).Logout(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: AuthService_Logout_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AuthServiceServer).Logout(ctx, req.(*LogoutRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _AuthService_LoginWithOTP_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(v1.VerifyMobileOTPRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(AuthServiceServer).LoginWithOTP(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: AuthService_LoginWithOTP_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AuthServiceServer).LoginWithOTP(ctx, req.(*v1.VerifyMobileOTPRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _AuthService_RequestPasswordReset_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(v1.GetUserByEmailRequest)
+	in := new(RequestPasswordResetRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -374,13 +399,13 @@ func _AuthService_RequestPasswordReset_Handler(srv interface{}, ctx context.Cont
 		FullMethod: AuthService_RequestPasswordReset_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AuthServiceServer).RequestPasswordReset(ctx, req.(*v1.GetUserByEmailRequest))
+		return srv.(AuthServiceServer).RequestPasswordReset(ctx, req.(*RequestPasswordResetRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _AuthService_ResetPasswordWithToken_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(v1.ResetPasswordRequest)
+	in := new(ResetPasswordWithTokenRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -392,7 +417,7 @@ func _AuthService_ResetPasswordWithToken_Handler(srv interface{}, ctx context.Co
 		FullMethod: AuthService_ResetPasswordWithToken_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AuthServiceServer).ResetPasswordWithToken(ctx, req.(*v1.ResetPasswordRequest))
+		return srv.(AuthServiceServer).ResetPasswordWithToken(ctx, req.(*ResetPasswordWithTokenRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -401,7 +426,7 @@ func _AuthService_ResetPasswordWithToken_Handler(srv interface{}, ctx context.Co
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var AuthService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "auth.AuthService",
+	ServiceName: "auth.v1.AuthService",
 	HandlerType: (*AuthServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
@@ -417,20 +442,24 @@ var AuthService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _AuthService_ValidateToken_Handler,
 		},
 		{
+			MethodName: "Logout",
+			Handler:    _AuthService_Logout_Handler,
+		},
+		{
+			MethodName: "RequestMobileOTP",
+			Handler:    _AuthService_RequestMobileOTP_Handler,
+		},
+		{
+			MethodName: "VerifyMobileOTP",
+			Handler:    _AuthService_VerifyMobileOTP_Handler,
+		},
+		{
 			MethodName: "CheckPermission",
 			Handler:    _AuthService_CheckPermission_Handler,
 		},
 		{
 			MethodName: "CheckRole",
 			Handler:    _AuthService_CheckRole_Handler,
-		},
-		{
-			MethodName: "Logout",
-			Handler:    _AuthService_Logout_Handler,
-		},
-		{
-			MethodName: "LoginWithOTP",
-			Handler:    _AuthService_LoginWithOTP_Handler,
 		},
 		{
 			MethodName: "RequestPasswordReset",

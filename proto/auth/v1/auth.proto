@@ -1,115 +1,71 @@
 syntax = "proto3";
 
-package auth;
-
+package auth.v1;
 option go_package = "github.com/amanc1361/bilan-rekar-proto/gen/proto/auth/v1";
 
 import "google/protobuf/timestamp.proto";
-import "proto/user/v1/user.proto";
 
-// Token message represents an authentication token
+// ---------- Shared messages ----------
 message Token {
-  string access_token = 1;
+  string access_token  = 1;
   string refresh_token = 2;
   google.protobuf.Timestamp expires_at = 3;
-  string token_type = 4; // Usually "Bearer"
+  string token_type = 4; // "Bearer"
 }
 
-// UserClaims represents the claims embedded in a token
-message UserClaims {
-  uint64 user_id = 1;
-  string username = 2;
-  repeated string roles = 3;
-  repeated string permissions = 4;
-  google.protobuf.Timestamp issued_at = 5;
-  google.protobuf.Timestamp expires_at = 6;
-}
-
-// Login request from another microservice
-message LoginRequest {
-  string username = 1;
-  string password = 2;
-}
-
-// Token response for successful login
-message LoginResponse {
-  bool success = 1;
-  string message = 2;
-  Token token = 3;
-  user.User user = 4; // Basic user info
-}
-
-// Refresh token request
-message RefreshTokenRequest {
-  string refresh_token = 1;
-}
-
-// Validate token request
-message ValidateTokenRequest {
-  string access_token = 1;
-}
-
-// Validate token response
-message ValidateTokenResponse {
-  bool valid = 1;
-  string message = 2;
-  UserClaims claims = 3; // Only populated if valid is true
-}
-
-// Check permission request
-message CheckPermissionRequest {
-  string access_token = 1;
-  string permission = 2;
-}
-
-// Check role request
-message CheckRoleRequest {
-  string access_token = 1;
-  string role = 2;
-}
-
-// Authorization check response
-message AuthorizationResponse {
-  bool authorized = 1;
-  string message = 2;
-}
-
-// Logout request
-message LogoutRequest {
-  string access_token = 1;
-  uint64 user_id = 2;
-}
-
-// Status response
 message StatusResponse {
-  bool success = 1;
+  bool   success = 1;
   string message = 2;
 }
 
-// Authentication service
+// ---------- OTP flow ----------
+message RequestMobileOTPRequest  { string phone = 1; }
+message VerifyMobileOTPRequest   { string phone = 1; string otp = 2; }
+message LoginResponse            {
+  Token token     = 1;
+  uint64 user_id  = 2;
+  string username = 3;
+}
+
+// ---------- Password / JWT flow ----------
+message LoginRequest          { string username = 1; string password = 2; }
+message RefreshTokenRequest   { string refresh_token = 1; }
+message ValidateTokenRequest  { string access_token  = 1; }
+message ValidateTokenResponse {
+  bool   valid   = 1;
+  string message = 2;
+  uint64 user_id = 3;
+  repeated string roles = 4;
+  google.protobuf.Timestamp expires_at = 5;
+}
+
+// ---------- RBAC checks ----------
+message CheckPermissionRequest { string access_token = 1; string permission = 2; }
+message CheckRoleRequest       { string access_token = 1; string role = 2; }
+message AuthorizationResponse  { bool authorized = 1; string message = 2; }
+
+message LogoutRequest { string access_token = 1; uint64 user_id = 2; }
+
+// ---------- Service ----------
 service AuthService {
-  // Login with username/password
-  rpc Login(LoginRequest) returns (LoginResponse);
-  
-  // Refresh token to get a new access token
-  rpc RefreshToken(RefreshTokenRequest) returns (LoginResponse);
-  
-  // Validate a token and get its claims
-  rpc ValidateToken(ValidateTokenRequest) returns (ValidateTokenResponse);
-  
-  // Authorization checks
-  rpc CheckPermission(CheckPermissionRequest) returns (AuthorizationResponse);
-  rpc CheckRole(CheckRoleRequest) returns (AuthorizationResponse);
-  
-  // Logout and invalidate token
-  rpc Logout(LogoutRequest) returns (StatusResponse);
-  
-  // Login with OTP (after mobile verification)
-  rpc LoginWithOTP(user.VerifyMobileOTPRequest) returns (LoginResponse);
-  
-  // Generate and send password reset token
-  rpc RequestPasswordReset(user.GetUserByEmailRequest) returns (StatusResponse);
-  
-  // Verify password reset token and set new password
-  rpc ResetPasswordWithToken(user.ResetPasswordRequest) returns (StatusResponse);
-} 
+  // --- Password / Token ---
+  rpc Login            (LoginRequest)          returns (LoginResponse);
+  rpc RefreshToken     (RefreshTokenRequest)   returns (LoginResponse);
+  rpc ValidateToken    (ValidateTokenRequest)  returns (ValidateTokenResponse);
+  rpc Logout           (LogoutRequest)         returns (StatusResponse);
+
+  // --- OTP (Two-step) ---
+  rpc RequestMobileOTP (RequestMobileOTPRequest) returns (StatusResponse); // 1) SMS
+  rpc VerifyMobileOTP  (VerifyMobileOTPRequest)  returns (LoginResponse);  // 2) JWT
+
+  // --- RBAC helpers ---
+  rpc CheckPermission  (CheckPermissionRequest) returns (AuthorizationResponse);
+  rpc CheckRole        (CheckRoleRequest)       returns (AuthorizationResponse);
+
+  // --- Forgotten-password flow (اختیاری) ---
+  rpc RequestPasswordReset (RequestPasswordResetRequest) returns (StatusResponse);
+  rpc ResetPasswordWithToken (ResetPasswordWithTokenRequest) returns (StatusResponse);
+}
+
+message RequestPasswordResetRequest     { string email = 1; }
+message ResetPasswordWithTokenRequest   { string token = 1; string new_password = 2; }
